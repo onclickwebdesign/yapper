@@ -1,0 +1,28 @@
+{
+  "name": "yapper",
+  "version": "1.0.0",
+  "description": "A social media application similar to twitter.",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onclickwebdesign/yapper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/onclickwebdesign/yapper/issues"
+  },
+  "homepage": "https://github.com/onclickwebdesign/yapper#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "crypto": "^1.0.1",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.6.7"
+  }
+}
