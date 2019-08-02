@@ -14,22 +14,22 @@ router.get('/login', async (req, res) => {
   }
 });
 
-router.get('/register', async (req, res) => {
+router.post('/register', async (req, res) => {
   let user = new User({
-    email: req.query.email,
-    handle: req.query.handle
+    email: req.body.email,
+    handle: req.body.handle
   });
+
+  console.log('wtf: ', req.body);
   
-  user.setPassword(req.query.password);
+  try {
+    user.setPassword(req.body.password);
+    const newUser = await user.save().catch(e => err = e);
 
-  let err;
-  const newUser = await user.save().catch(e => err = e);
-
-  if (err) {
-    console.error('Something went wrong attempting to create the new user account.');
-    res.status(500).json({ message: 'Error attempting to create new user account' });
-  } else {
     res.status(200).json(newUser.toAuthJSON());
+  } catch (err) {
+    console.error('Something went wrong attempting to create the new user account.', err);
+    res.status(500).json({ message: 'Error attempting to create new user account', err });
   }
 });
 

@@ -2,9 +2,15 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
+require('dotenv').config();
 const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// enable CORS
+app.use(cors());
+app.options('*', cors());
 
 // Configure Mongoose
 mongoose.connect('mongodb://localhost/yapper');

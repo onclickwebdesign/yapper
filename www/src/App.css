@@ -23,11 +23,17 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
+form {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+/* @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
   }
-}
+} */
