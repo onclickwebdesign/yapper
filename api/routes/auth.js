@@ -1,17 +1,23 @@
 const mongoose = require('mongoose');
 const router = require('express').Router();
 const User = mongoose.model('User');
+const passport = require('passport');
 
 router.get('/login', async (req, res) => {
-  const user = await User.findOne({ email: req.query.email });
+  passport.authenticate('local', {
+    successRedirect: 'http://localhost:3001?fuck=ya',
+    failureRedirect: 'http://localhost:3001?fuck=no',
+  })(req, res, next);
 
-  if (!user || !user.validatePassword(req.query.password)) {
-    res.status(403).json({
-      message: 'You have provided incorrect credentials'
-    });
-  } else {
-    res.status(200).json(user.toAuthJSON());
-  }
+  // const user = await User.findOne({ email: req.query.email });
+
+  // if (!user || !user.validatePassword(req.query.password)) {
+  //   res.status(403).json({
+  //     message: 'You have provided incorrect credentials'
+  //   });
+  // } else {
+  //   res.status(200).json(user.toAuthJSON());
+  // }
 });
 
 router.post('/register', async (req, res) => {

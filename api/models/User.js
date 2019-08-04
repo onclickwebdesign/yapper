@@ -9,6 +9,10 @@ const UserSchema = new Schema({
   hash: String,
   salt: String,
   handle: String,
+  date: {
+    type: Date,
+    default: Date.now
+  },
   yipIds: [Number],
   yipBackIds: [Number],
   replyIds: [Number],

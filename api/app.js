@@ -3,17 +3,36 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const session = require('express-session');
+const passport = require('passport');
 require('dotenv').config();
 const PORT = process.env.PORT || 5000;
 
+require('./config/passport')(passport);
+
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// Express Session
+app.use(session({
+  secret: 'yapper secret',
+  resave: true,
+  saveUninitialized: true,
+  //cookie: { secure: true }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // enable CORS
-app.use(cors());
-app.options('*', cors());
+app.use(cors({credentials: true, origin: true}));
+app.options('*', cors({credentials: true, origin: true}));
 
 // Configure Mongoose
-mongoose.connect('mongodb://localhost/yapper');
+mongoose.connect('mongodb://localhost/yapper', { useNewUrlParser: true}).then(
+  () => console.log('MongoDB Connected..')
+).catch(err => console.error(err));
+
 mongoose.set('debug', true);
 
 // Import Mongoose Models

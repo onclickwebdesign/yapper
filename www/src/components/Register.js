@@ -19,16 +19,19 @@ class Register extends Component {
   }
 
   async doRegister() {
-    const postData = {
-      handle: this.state.handle,
-      email: this.state.email,
-      password: this.state.password
-    };
-
-    console.log('wtf: ', postData);
+    const handle = this.state.handle;
+    const email = this.state.email;
+    const password = this.state.password;
 
     try {
-      const result = await fetch('http://localhost:3002/auth/register', { method: 'POST', body: postData });
+      const result = await fetch('http://localhost:3002/auth/register', { 
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ handle, email, password })
+      });
+
       const jsonResult = await result.json();
 
       console.log('jsonResult: ', jsonResult);
