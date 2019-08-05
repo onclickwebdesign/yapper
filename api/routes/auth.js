@@ -2,22 +2,27 @@ const mongoose = require('mongoose');
 const router = require('express').Router();
 const User = mongoose.model('User');
 const passport = require('passport');
+require('dotenv').config();
 
-router.get('/login', async (req, res) => {
-  passport.authenticate('local', {
-    successRedirect: 'http://localhost:3001?fuck=ya',
-    failureRedirect: 'http://localhost:3001?fuck=no',
-  })(req, res, next);
+router.post('/login', passport.authenticate('local'), async (req, res, next) => {
+  console.log('user from authjs: ', req.user);
 
-  // const user = await User.findOne({ email: req.query.email });
+  if (!req.user) {
+    res.status(403).json({
+      message: 'You have provided incorrect credentials',
+      redirect: `${process.env.webUrl}?success=no`
+    });
+  } else {
+    res.status(200).json({
+      user: req.user.toAuthJSON(),
+      redirect: `${process.env.webUrl}?success=ya` 
+    });
+  }
+});
 
-  // if (!user || !user.validatePassword(req.query.password)) {
-  //   res.status(403).json({
-  //     message: 'You have provided incorrect credentials'
-  //   });
-  // } else {
-  //   res.status(200).json(user.toAuthJSON());
-  // }
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect(`${process.env.webUrl}?loggedout=true`);
 });
 
 router.post('/register', async (req, res) => {
@@ -26,7 +31,7 @@ router.post('/register', async (req, res) => {
     handle: req.body.handle
   });
 
-  console.log('wtf: ', req.body);
+  console.log('from /register server route: ', req.body);
   
   try {
     user.setPassword(req.body.password);

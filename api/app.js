@@ -42,7 +42,7 @@ require('./models/YipBack');
 require('./models/Reply');
 
 // setup routes
-app.use(require('./routes/profile'));
+app.use('/user', require('./routes/user'));
 app.use('/auth', require('./routes/auth'));
 
 // 404 route
@@ -55,7 +55,7 @@ app.use((req, res, next) => {
 // error handler
 app.use((err, req, res, next) => {
   err.status = err.status || 500;
-  res.status(err.status).render('error', { err });
+  res.status(err.status).redirect(`${process.env.webUrl}?404=true`);
 });
 
 app.listen(PORT, () => {
