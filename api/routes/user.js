@@ -4,11 +4,8 @@ const User = mongoose.model('User');
 const verify = require('./verify');
 
 router.get('/', verify.required, async (req, res) => {
-  //console.log('req query is: ', req.query);
   console.log('req.payload is: ', req.payload);
-  //const id = req.query.id;
   
-
   const { payload: { id } } = req;
   console.log('id is: ', id);
 
@@ -29,19 +26,12 @@ router.get('/', verify.required, async (req, res) => {
     handle: user.handle,
     email: user.email,
   });
+});
 
-  //   yipIds: [],
-  //   yipBackIds: [],
-  //   replyIds: [],
-  //   account: {
-  //     accountTypeId: 1,
-  //     isActive: { type: Boolean, default: false },
-  //     isFlagged: { type: Boolean, default: false },
-  //     isFrozen: { type: Boolean, default: false }
-  //   }
-  // }
+router.post('/updateprofile', verify.required, async (req, res) => {
+  console.log('req body: ', req.body);
 
-
+  res.send('boomshakalaka');
 });
 
 module.exports = router;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 class Profile extends Component {
   constructor(props) {
@@ -59,31 +60,28 @@ class Profile extends Component {
 
   async doProfileUpdate() {
     const email = this.state.email;
-    const password = this.state.password;
+    const handle = this.state.handle;
 
     try {
-      const result = fetch('http://localhost:3002/auth/login', { 
+      const response = await fetch('http://localhost:3002/user/updateprofile', { 
         method: 'POST', 
         headers: {
-          //'Authorization': `Token ${token}`,
+          'Authorization': `Token ${this.state.token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password })
-      }).then(response => {
-        if (response.status === 401) {
-          return { msg: 'Email or password is incorrect.' };
-        } else {
-          return response.json();
-        }
-      }).then(user => console.log(user));
-
+        body: JSON.stringify({ email, handle })
+      });
+      
+      const json = await response.json();
+      console.log('update profile json: ', json);
+      
     } catch (err) {
       console.error('Something bad happened: ', err);
     }
   }
 
   render() {
-    const greeting = this.state.token ? <h1 className="text-center">Welcome {this.state.handle}!</h1> : <h1 className="text-center">Unauthorized</h1>;
+    const greeting = <h1 className="text-center">{ this.state.token ? `Welcome ${this.state.handle}!` : `Unauthorized` }</h1>;
     return (
       <div className="container">
         { greeting }
@@ -97,7 +95,8 @@ class Profile extends Component {
           </div>
 
           <div className="form-group">
-            <input type="password" name="password" className="form-control" value={this.state.password} onChange={(e) => this.updateInput(e)} placeholder="Password" />
+            <input type="password" name="password" className="form-control" value="******" readOnly />
+            <Link to="/resetpassword">Reset Password</Link>
           </div>
 
           <div className="form-group">
@@ -106,6 +105,7 @@ class Profile extends Component {
         </form>
       </div>
       
+
     );
   }
   
