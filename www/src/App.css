@@ -1,5 +1,5 @@
-.App {
-  text-align: center;
+html, body {
+  height: 100%;
 }
 
 .App-logo {
@@ -28,6 +28,54 @@ form {
   max-width: 800px;
   margin: 2rem auto;
 }
+
+.yapper-btn-primary {
+  background: #D62828;
+}
+
+.yapper-btn-secondary {
+  background: transparent;
+}
+
+#yapper-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+#yapper-wrapper > section {
+  width: 50%;
+}
+
+#yapper-features {
+  background: #FCBF49;
+}
+
+#yapper-join-login {
+  background: #3C3C3B;
+  position: relative;
+}
+
+header {
+  position: absolute;
+  top: 50%;
+  margin: -100px auto 0;
+  left: 0;
+  right: 0;
+  width: 90%;
+  max-width: 650px;
+}
+
+/*
+#1446AO
+#EBEBD3
+#3C3C3B
+#F5D547
+#DB3069
+#E4572E
+#D62828 - amaranth red
+#FCBF49 - max yellow red
+#EAE2B7 - dutch white
+*/
 
 /* @keyframes App-logo-spin {
   from {

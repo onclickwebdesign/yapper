@@ -13,7 +13,6 @@ import * as serviceWorker from './serviceWorker';
 
 const routing = (
   <BrowserRouter>
-    <Header />
     <Switch>
       <Route exact path="/" component={App} />
       <Route path="/register" component={Register} />
