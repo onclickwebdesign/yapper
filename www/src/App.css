@@ -1,5 +1,12 @@
-html, body {
+html, body, #root, #yapper-wrapper, main {
   height: 100%;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5 {
+  margin-bottom: 2rem;
 }
 
 .App-logo {
@@ -8,29 +15,32 @@ html, body {
   pointer-events: none;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 40vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
 form {
   padding: 2rem;
   max-width: 800px;
   margin: 2rem auto;
 }
 
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  margin: 20px 0;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .yapper-btn-primary {
-  background: #D62828;
+  background: transparent;
+  color: #fff;
+  border-color: #fff;
+  border-width: 2px;
 }
 
 .yapper-btn-secondary {
@@ -38,50 +48,29 @@ form {
 }
 
 #yapper-wrapper {
+  background: #3C3C3B;
+}
+
+main {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  align-items: center;
 }
 
 #yapper-wrapper > section {
   width: 50%;
 }
 
-#yapper-features {
-  background: #FCBF49;
+#yapper-join-login > div {
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-#yapper-join-login {
-  background: #3C3C3B;
-  position: relative;
+#yapper-join-login a {
+  display: block;
+  margin: 15px 0;
 }
 
-header {
-  position: absolute;
-  top: 50%;
-  margin: -100px auto 0;
-  left: 0;
-  right: 0;
-  width: 90%;
-  max-width: 650px;
-}
+/* start: timeline styles */
 
-/*
-#1446AO
-#EBEBD3
-#3C3C3B
-#F5D547
-#DB3069
-#E4572E
-#D62828 - amaranth red
-#FCBF49 - max yellow red
-#EAE2B7 - dutch white
-*/
-
-/* @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
+/* end: timeline styles */

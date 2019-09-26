@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-bootstrap';
 
-class Register extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      handle: '',
       email: '',
       password: ''
     };
@@ -18,23 +17,31 @@ class Register extends Component {
     this.setState(newState);
   }
 
-  async doRegister() {
-    const handle = this.state.handle;
+  async doLogin() {
     const email = this.state.email;
     const password = this.state.password;
 
     try {
-      const result = await fetch('http://localhost:3002/auth/register', { 
+      const response = await fetch('http://localhost:3002/auth/login', { 
         method: 'POST', 
         headers: {
+          //'Authorization': `Token ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ handle, email, password })
+        body: JSON.stringify({ email, password })
       });
 
-      const jsonResult = await result.json();
+      let json;
 
-      console.log('jsonResult: ', jsonResult);
+      if (response.status === 401) {
+        json = { msg: 'Email or password is incorrect.' };
+      } else {
+        json = await response.json();
+        localStorage.setItem('usersession', JSON.stringify(json));
+      }
+      
+      console.log('json is: ', json);
+
     } catch (err) {
       console.error('Something bad happened: ', err);
     }
@@ -44,10 +51,6 @@ class Register extends Component {
     return (
       <form>
         <div className="form-group">
-          <input type="text" name="handle" className="form-control" value={this.state.handle} onChange={(e) => this.updateInput(e)} placeholder="Handle" />
-        </div>
-
-        <div className="form-group">
           <input type="email" name="email" className="form-control" value={this.state.email} onChange={(e) => this.updateInput(e)} placeholder="Email" />
         </div>
 
@@ -56,7 +59,7 @@ class Register extends Component {
         </div>
 
         <div className="form-group">
-          <button id="register-button" type="button" onClick={() => this.doRegister()}>Join</button>
+          <button id="login-button" type="button" onClick={() => this.doLogin()}>Log In!</button>
         </div>
       </form>
     );
@@ -64,4 +67,4 @@ class Register extends Component {
   
 }
 
-export default Register;
+export default Login;

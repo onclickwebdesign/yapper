@@ -15,8 +15,8 @@ class Profile extends Component {
     };
   }
 
-  async componentWillMount() {
-    console.log('component will mount');
+  async componentDidMount() {
+    console.log('componentDidMount');
 
     if (!this.state.token) {
       console.log('not authorized to view this page...');
