@@ -6,7 +6,15 @@ html, body, #root, #yapper-wrapper, main {
 }
 
 h1, h2, h3, h4, h5 {
-  margin-bottom: 2rem;
+  
+}
+
+a, a:hover {
+  text-decoration: none;
+}
+
+img {
+  width: 100%;
 }
 
 .App-logo {
@@ -27,8 +35,16 @@ ul {
   margin: 0;
 }
 
-ul li {
-  margin: 20px 0;
+section ul:not(.no-margin) li {
+  margin: 1rem 0;
+}
+
+section ul:not(.no-margin) li:first-child {
+  margin-top: 0;
+}
+
+section ul:not(.no-margin) li:last-child {
+  margin-bottom: 0;
 }
 
 header {
@@ -41,6 +57,11 @@ header {
   color: #fff;
   border-color: #fff;
   border-width: 2px;
+}
+
+.yapper-btn-primary:hover {
+  background: #000;
+  color: #fff;
 }
 
 .yapper-btn-secondary {
@@ -57,7 +78,7 @@ main {
   align-items: center;
 }
 
-#yapper-wrapper > section {
+#yapper-wrapper > section.no-auth {
   width: 50%;
 }
 

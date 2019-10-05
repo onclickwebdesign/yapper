@@ -4,12 +4,14 @@ import Header from './components/Header';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Home from './components/Home';
+import Footer from './components/Footer';
 import './App.css';
 
 function App() {
   return (
     <div id="yapper-wrapper">
       <Home />
+      <Footer />
     </div>
   );
 }
