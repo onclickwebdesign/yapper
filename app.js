@@ -31,6 +31,9 @@ app.use(passport.session());
 app.use(cors({credentials: true, origin: true}));
 app.options('*', cors({credentials: true, origin: true}));
 
+// serve up static assets
+app.use('/static', express.static('public'));
+
 // serve up static React app for production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));

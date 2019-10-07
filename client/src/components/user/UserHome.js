@@ -1,43 +1,32 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route } from 'react-router-dom';
 import LeftNav from './LeftNav';
 import Search from './Search';
+import ComposeYip from '../yip/ComposeYip';
 import Timeline from './Timeline';
 import styled from 'styled-components';
 
 const HomeSection = styled.section`
-  padding: 1rem 1.5rem 0 1rem;
-  display: flex;
-  justify-content: space-between;
+  background: #3C3C3B;
+  
 `;
 
-class UserHome extends Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      
-    };
-  }
+const UserHome = props => {
+  return (
+    <HomeSection>
+      <LeftNav />
 
-  async componentDidMount() {
-    
-  }
-
-  render() {
-    return (
-      <HomeSection>
-        <LeftNav />
-
-        <main style={{width:'50%',border:'1px solid #fff'}}>
+      <main>
+        <div style={{width:'50%', border:'1px solid #fff'}}>
+          <ComposeYip {...props} />
           <Route path="/" component={Timeline} />
-          
-        </main>
+        </div>
+      </main>
 
-        <Search />
-      </HomeSection>
-    );
-  }
+      <Search />
+    </HomeSection>
+  );
+  
 }
 
 export default UserHome;

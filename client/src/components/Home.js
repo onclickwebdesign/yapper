@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // import { Link } from 'react-router-dom';
 import UserHome from './user/UserHome';
 import Main from './Main';
+import Footer from './Footer';
 
 class Home extends Component {
   constructor(props) {
@@ -23,7 +24,9 @@ class Home extends Component {
 
   render() {
     return (
-      this.state.token ? <UserHome /> : <Main />
+      this.state.token ? 
+        <UserHome {...this.state} /> : 
+        (<div><Main /><Footer /></div>)
     );
   }
 }

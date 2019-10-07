@@ -7,7 +7,7 @@ function App() {
   return (
     <div id="yapper-wrapper">
       <Home />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

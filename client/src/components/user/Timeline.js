@@ -1,10 +1,10 @@
 import React from 'react';
-import ComposeYip from '../yip/ComposeYip';
-import Feed from './Feed';
+import Yip from '../yip/Yip';
 
 class Timeline extends React.Component {
   constructor(props) {
     super(props);
+    
     this.state = {
       yips: []
     };
@@ -14,6 +14,7 @@ class Timeline extends React.Component {
     // pull user's Yips from API...
     const yips = [
       {
+        _id: 'asdf234asdf',
         handle: 'AlexanderTheGreat', 
         userImage: 'https://lh3.googleusercontent.com/-_ZC3oNfwBHA/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rcv3ad4_B22__TjYsyyY0zQAvBELg.CMID/s96-c/photo.jpg',
         body: 'Just yippin and yappin over here.',
@@ -25,6 +26,7 @@ class Timeline extends React.Component {
         shareCount: 45
       },
       {
+        _id: 'jjkl567jkl',
         handle: 'AlexanderTheGreat', 
         userImage: 'https://lh3.googleusercontent.com/-_ZC3oNfwBHA/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rcv3ad4_B22__TjYsyyY0zQAvBELg.CMID/s96-c/photo.jpg',
         body: 'Well what do you know, I am actually taking the time to basically rebuild this application to further cement my development skills.',
@@ -39,12 +41,14 @@ class Timeline extends React.Component {
     this.setState({yips});
   }
 
+  handleSubmitYip = event => {
+    console.log('yip submitted..');
+    // save to db
+  }
+
   render() {
     return (
-      <div>
-        <ComposeYip />
-        <Feed yips={this.state.yips} />
-      </div>
+      this.state.yips.map(yip => <Yip {...yip} key={yip._id} />)
     );
   }
 }

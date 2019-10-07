@@ -30,8 +30,8 @@ const active = {
 
 const LeftNav = props => {
   return (
-    <nav style={{width:200}}>
-      <ul style={{position:'fixed'}}>
+    <nav style={{width:200, position:'fixed'}}>
+      <ul>
         <li>
           <LeftNavLink style={{padding:'0 0.85rem', margin:'0.5rem 0 0 0.65rem', borderRadius:35}} to="/">
             <Logo fontSize="2.25rem" />

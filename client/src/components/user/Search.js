@@ -7,6 +7,10 @@ const SearchContainer = styled.div`
   border: 1px solid #fff;
   background: transparent;
   color: #fff;
+  position: fixed;
+  right: 1rem;
+  top: 0;
+  width: 200px;
 `;
 
 const Search = props => {

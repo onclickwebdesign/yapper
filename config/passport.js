@@ -6,7 +6,7 @@ module.exports = passport => {
   passport.use(
     new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, async (email, password, done) => {
       User.findOne({ email }).then(user => {
-        console.log('shits: ', email, password);
+        console.log('stuff: ', email, password);
 
         // Match password
         if (!user || !user.validatePassword(password)) {
