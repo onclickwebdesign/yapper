@@ -10,4 +10,6 @@ const YipSchema = new Schema({
   replyIds: [Number]
 });
 
-mongoose.model('Yip', YipSchema);
+const Yip = mongoose.model('Yip', YipSchema);
+
+module.exports = Yip;

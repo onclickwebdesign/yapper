@@ -1,17 +1,20 @@
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 require('dotenv').config();
 const PORT = process.env.PORT || 5000;
 
+// Import Mongoose Models
+require('./models');
+
 require('./config/passport')(passport);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Express Session
 app.use(session({
@@ -28,22 +31,20 @@ app.use(passport.session());
 app.use(cors({credentials: true, origin: true}));
 app.options('*', cors({credentials: true, origin: true}));
 
+// serve up static React app for production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'));
+}
+
 // Configure Mongoose
-mongoose.connect('mongodb://localhost/yapper', { useNewUrlParser: true}).then(
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/yapper', { useNewUrlParser: true}).then(
   () => console.log('MongoDB Connected..')
 ).catch(err => console.error(err));
 
 mongoose.set('debug', true);
 
-// Import Mongoose Models
-require('./models/User');
-require('./models/Yip');
-require('./models/YipBack');
-require('./models/Reply');
-
 // setup routes
-app.use('/user', require('./routes/user'));
-app.use('/auth', require('./routes/auth'));
+app.use(require('./routes'));
 
 // 404 route
 app.use((req, res, next) => {

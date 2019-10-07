@@ -1,7 +1,8 @@
-const mongoose = require('mongoose');
 const router = require('express').Router();
+const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const verify = require('./verify');
+// const User = require('mongoose').model('User');
 
 router.get('/', verify.required, async (req, res) => {
   console.log('req.payload is: ', req.payload);

@@ -11,4 +11,6 @@ const ReplySchema = new Schema({
   createdDate: { type: Date, default: Date.now }
 });
 
-mongoose.model('Reply', ReplySchema);
+const Reply = mongoose.model('Reply', ReplySchema);
+
+module.exports = Reply;

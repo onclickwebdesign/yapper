@@ -10,4 +10,6 @@ const YipBackSchema = new Schema({
   replyIds: [Number]
 });
 
-mongoose.model('YipBack', YipBackSchema);
+const YipBack = mongoose.model('YipBack', YipBackSchema);
+
+module.exports = YipBack;
