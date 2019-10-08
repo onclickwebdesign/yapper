@@ -17,7 +17,7 @@ const Search = props => {
   return (
     <div>
       <SearchContainer>
-        <span class="fa fa-search"></span>
+        <span className="fa fa-search"></span>
         <input type="text" placeholder="Search Yapper" />
       </SearchContainer>
     </div>
