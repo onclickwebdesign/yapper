@@ -83,6 +83,28 @@ class ComposeYip extends Component {
     
   }
 
+  postYip = async () => {
+    const yip = {
+      body: this.state.yipBody,
+      yipBackCount: 0,
+      replyIds: []
+    };
+
+    const response = await fetch('/api/yip/', { 
+      method: 'POST', 
+      headers: {
+        'Authorization': `Token ${this.props.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(yip)
+    });
+
+    console.log('compose yip response: ', response);
+    if (response.success) {
+      this.setState({yipBody: ''});
+    }
+  }
+
   searchYipBody = () => {
     if (this.state.yipBody.indexOf('#') > -1) {
       
@@ -90,7 +112,6 @@ class ComposeYip extends Component {
   }
 
   handleInputChange = event => {
-    console.log('in input change', event.target.innerHTML);
     this.setState({yipBody: event.target.innerHTML});
   }
 
@@ -124,7 +145,7 @@ class ComposeYip extends Component {
             <IconButton style={{display:'flex'}} onClick={this.handleGif}><GifIcon>GIF</GifIcon></IconButton>
             <IconButton onClick={this.handleEmoji} style={{fontSize:'1.5rem'}}><span className="far fa-smile" style={{verticalAlign:'bottom'}}></span></IconButton>
           </FlexContainer>
-          <button style={{height:40}} className="yapper-btn-primary btn btn-primary">Yip</button>
+          <button style={{height:40}} onClick={this.postYip} className="yapper-btn-primary btn btn-primary">Yip</button>
         </FlexContainer>
         
       </ComposeContainer>

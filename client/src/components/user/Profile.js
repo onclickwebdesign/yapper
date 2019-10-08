@@ -7,10 +7,10 @@ class Profile extends Component {
     const session = JSON.parse(localStorage.getItem('usersession'));
     console.log('session is: ', session);
     this.state = {
-      handle: '',
-      email: session ? session.user.email : '',
-      token: session ? session.user.token : '',
-      id: session ? session.user._id: '',
+      handle: session ? session.handle : '',
+      email: session ? session.email : '',
+      token: session ? session.token : '',
+      id: session ? session._id: '',
     };
   }
 
@@ -21,7 +21,7 @@ class Profile extends Component {
       console.log('not authorized to view this page...');
     } else {
       try {
-        const response = await fetch(`http://localhost:3002/user?id=${this.state.id}`, { 
+        const response = await fetch(`/api/user?id=${this.state.id}`, { 
           method: 'GET', 
           headers: {
             'Authorization': `Token ${this.state.token}`,
@@ -62,7 +62,7 @@ class Profile extends Component {
     const handle = this.state.handle;
 
     try {
-      const response = await fetch('http://localhost:3002/user/updateprofile', { 
+      const response = await fetch('/api/user/updateprofile', { 
         method: 'POST', 
         headers: {
           'Authorization': `Token ${this.state.token}`,
@@ -99,7 +99,7 @@ class Profile extends Component {
           </div>
 
           <div className="form-group">
-            <button type="button" onClick={() => this.doProfileUpdate()}>Update Profile Info</button>
+            <button type="button" className="btn btn-primary yapper-btn-primary" onClick={() => this.doProfileUpdate()}>Update Profile Info</button>
           </div>
         </form>
       </div>

@@ -5,6 +5,10 @@ html, body, #root, #yapper-wrapper, main {
   padding: 0;
 }
 
+#root {
+  background: #3C3C3B;
+}
+
 * {
   outline: none !important;
 }

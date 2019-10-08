@@ -13,12 +13,10 @@ const SearchContainer = styled.div`
 
 const Search = props => {
   return (
-    
-      <SearchContainer>
-        <span className="fa fa-search"></span>
-        <input type="text" placeholder="Search Yapper" />
-      </SearchContainer>
-    
+    <SearchContainer>
+      <span className="fa fa-search"></span>
+      <input type="text" placeholder="Search Yapper" />
+    </SearchContainer>
   );
 };
 

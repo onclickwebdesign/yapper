@@ -13,9 +13,18 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  yipIds: [Number],
-  yipBackIds: [Number],
-  replyIds: [Number],
+  yips: [{
+    type: Schema.Types.ObjectId,
+    ref: "Yip"
+  }],
+  yipBacks: [{
+    type: Schema.Types.ObjectId,
+    ref: "YipBack"
+  }],
+  replys: [{
+    type: Schema.Types.ObjectId,
+    ref: "Reply"
+  }],
   account: {
     accountTypeId: { type: Number, default: 1 },
     isActive: { type: Boolean, default: false },
