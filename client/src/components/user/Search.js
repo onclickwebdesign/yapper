@@ -7,20 +7,18 @@ const SearchContainer = styled.div`
   border: 1px solid #fff;
   background: transparent;
   color: #fff;
-  position: fixed;
-  right: 1rem;
-  top: 0;
+  margin-top: 1rem;
   width: 200px;
 `;
 
 const Search = props => {
   return (
-    <div>
+    
       <SearchContainer>
         <span className="fa fa-search"></span>
         <input type="text" placeholder="Search Yapper" />
       </SearchContainer>
-    </div>
+    
   );
 };
 

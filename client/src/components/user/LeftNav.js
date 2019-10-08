@@ -2,6 +2,7 @@ import React from 'react';
 import Logo from '../Logo';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
+import Search from './Search';
 
 const LeftNavLink = styled(NavLink)`
   font-size: 1.25rem;
@@ -52,6 +53,8 @@ const LeftNav = props => {
           </LeftNavLink>
         </li>
       </ul>
+
+      <Search />
     </nav>
   );
 };
