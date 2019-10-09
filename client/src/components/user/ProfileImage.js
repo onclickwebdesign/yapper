@@ -10,19 +10,21 @@ const ImageContainer = styled.div`
 const imageUploaderStyles = {
   position: 'absolute',
   zIndex: 2,
-  top: 0,
+  bottom: 0,
   left: 0,
   width: '100%',
-  height: '100%',
   border: 'none',
-  display: 'block',
   margin: 0,
-  borderRadius: 10
+  padding: 0,
+  borderRadius: 10,
+  borderTopLeftRadius: 0,
+  borderTopRightRadius: 0,
+  fontSize: '2rem'
 }
 
 const Image = styled.img`
   border-radius: 10px;
-  z-index: 3;
+  z-index: 1;
   position: relative;
 `;
 const ProfileImage = props => {
@@ -31,7 +33,17 @@ const ProfileImage = props => {
 
   return (
     <ImageContainer>
-      <ImageUploader fileContainerStyle={{background:'transparent', ...imageUploaderStyles}} buttonStyles={{background: 'rgba(0, 0, 0, 0.6)', ...imageUploaderStyles}} withLabel={false} withIcon={false} singleImage={true} buttonText='+' onChange={props.doProfileImageUpload} imgExtension={['.jpg', '.png', '.jpeg']} maxFileSize={3000000} />
+      <ImageUploader 
+        fileContainerStyle={{background:'transparent', height:'30%', ...imageUploaderStyles}} 
+        buttonStyles={{background: 'rgba(0, 0, 0, 0.6)', height:'100%', display:'flex', justifyContent:'space-around', ...imageUploaderStyles}} 
+        withLabel={false} 
+        withIcon={false} 
+        singleImage={true} 
+        buttonText={<span style={{fontSize:'1rem'}} className="fa fa-edit"></span>} 
+        onChange={props.doProfileImageUpload} 
+        imgExtension={['.jpg', '.png', '.jpeg']} 
+        maxFileSize={3000000} />
+
       {/* <Image src={props.profileImage} alt="User Profile Image" /> */}
       <Image src={imageT} alt="User Profile Image" />
     </ImageContainer>

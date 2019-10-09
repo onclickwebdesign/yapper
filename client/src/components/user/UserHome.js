@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 import LeftNav from './LeftNav';
 import ComposeYip from '../yip/ComposeYip';
 import Timeline from './Timeline';
+import Profile from './Profile';
 import styled from 'styled-components';
 
 const HomeSection = styled.div`
@@ -20,7 +21,8 @@ const UserHome = props => {
         <main>
           <div style={{width:'60%', border:'1px solid #fff'}}>
             <ComposeYip {...props} />
-            <Route path="/" component={() => <Timeline {...props} />} />
+            <Route exact path="/" component={() => <Timeline {...props} />} />
+            <Route exact path="/profile" component={Profile} />
           </div>
         </main>
 
