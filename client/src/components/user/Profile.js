@@ -63,6 +63,20 @@ class Profile extends Component {
   doProfileImageUpload = async image => {
     console.log('image: ', image);
     // fetch here..
+    
+    if (image.length > 0) {
+      const response = await fetch('/api/user/updateprofilepicture', { 
+        method: 'POST', 
+        headers: {
+          'Authorization': `Token ${this.state.token}`,
+          'Content-Type': 'application/json',
+        },
+        body: image[0]
+      });
+      
+      const json = await response.json();
+      console.log('update profile json: ', json);
+    }
   }
 
   doProfileUpdate = async () => {

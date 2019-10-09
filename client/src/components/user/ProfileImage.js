@@ -41,6 +41,7 @@ const ProfileImage = props => {
         singleImage={true} 
         buttonClassName="fa fa-edit"
         buttonText='' 
+        name='profileImage'
         onChange={props.doProfileImageUpload} 
         imgExtension={['.jpg', '.png', '.jpeg']} 
         maxFileSize={3000000} />
