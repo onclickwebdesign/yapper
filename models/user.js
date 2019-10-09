@@ -13,18 +13,20 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  yips: [{
-    type: Schema.Types.ObjectId,
-    ref: "Yip"
-  }],
-  yipBacks: [{
-    type: Schema.Types.ObjectId,
-    ref: "YipBack"
-  }],
-  replys: [{
-    type: Schema.Types.ObjectId,
-    ref: "Reply"
-  }],
+  following: [Schema.Types.ObjectId],
+  followers: Number,
+  // yips: [{
+  //   type: Schema.Types.ObjectId,
+  //   ref: "Yip"
+  // }],
+  // yipBacks: [{
+  //   type: Schema.Types.ObjectId,
+  //   ref: "YipBack"
+  // }],
+  // replys: [{
+  //   type: Schema.Types.ObjectId,
+  //   ref: "Reply"
+  // }],
   account: {
     accountTypeId: { type: Number, default: 1 },
     isActive: { type: Boolean, default: false },

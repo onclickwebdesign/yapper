@@ -2,6 +2,7 @@ const router = require('express').Router();
 // const mongoose = require('mongoose');
 // const User = mongoose.model('User');
 const passport = require('passport');
+const { s3 } = require('../../util/utilities');
 require('dotenv').config();
 
 router.post('/login', passport.authenticate('local'), async (req, res, next) => {
@@ -13,8 +14,12 @@ router.post('/login', passport.authenticate('local'), async (req, res, next) => 
       redirect: `${process.env.webUrl}?success=no`
     });
   } else {
+    // get user profile pic from s3 bucket
+    console.log('on login user id: ', req.user.id);
+    const profileImage = await s3.getObject({Bucket: 'yapper-bucket', Key: req.user.id + '/'})
+    console.log('user image is: ', profileImage);
     res.status(200).json({
-      user: req.user.toAuthJSON(),
+      user: { profileImage, ...req.user.toAuthJSON() },
       redirect: `${process.env.webUrl}?success=ya` 
     });
   }

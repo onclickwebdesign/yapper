@@ -4,14 +4,26 @@ import Yip from '../yip/Yip';
 class Timeline extends React.Component {
   constructor(props) {
     super(props);
-    
+    console.log('Timeline: ', props);
     this.state = {
       yips: []
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // pull user's Yips from API...
+    const response = await fetch('/api/yip/', { 
+      method: 'GET', 
+      headers: {
+        'Authorization': `Token ${this.props.token}`,
+        'Content-Type': 'application/json',
+      }
+    });
+
+    const result = await response.json();
+
+    console.log('response: ', result);
+
     const yips = [
       {
         _id: 'asdf234asdf',

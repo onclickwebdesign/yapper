@@ -11,8 +11,6 @@ const HomeSection = styled.div`
   position: relative;
 `;
 
-
-
 const UserHome = props => {
   return (
     <section style={{background:'#3C3C3B'}}>
@@ -22,7 +20,7 @@ const UserHome = props => {
         <main>
           <div style={{width:'60%', border:'1px solid #fff'}}>
             <ComposeYip {...props} />
-            <Route path="/" component={Timeline} />
+            <Route path="/" component={() => <Timeline {...props} />} />
           </div>
         </main>
 

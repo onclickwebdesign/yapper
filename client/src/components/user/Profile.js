@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Col, Row, Container } from 'react-bootstrap';
+import ProfileImage from './ProfileImage';
 
 class Profile extends Component {
   constructor(props) {
@@ -9,6 +11,7 @@ class Profile extends Component {
     this.state = {
       handle: session ? session.handle : '',
       email: session ? session.email : '',
+      profileImage: session ? session.profileImage: '',
       token: session ? session.token : '',
       id: session ? session._id: '',
     };
@@ -51,13 +54,17 @@ class Profile extends Component {
     }
   }
 
-  updateInput(e) {
-    const newState = {};
-    newState[e.target.name] = e.target.value;
-    this.setState(newState);
+  updateInput = e => {
+    const {name, value} = e.target;
+    this.setState({ [name]: value });
   }
 
-  async doProfileUpdate() {
+  doProfileImageUpload = async image => {
+    console.log('image: ', image);
+    // fetch here..
+  }
+
+  doProfileUpdate = async () => {
     const email = this.state.email;
     const handle = this.state.handle;
 
@@ -82,29 +89,35 @@ class Profile extends Component {
   render() {
     const greeting = <h1 className="text-center">{ this.state.token ? `Welcome ${this.state.handle}!` : `Unauthorized` }</h1>;
     return (
-      <div className="container">
+      <Container>
         { greeting }
-        <form>
-          <div className="form-group">
-            <input type="text" name="handle" className="form-control" value={this.state.handle} onChange={(e) => this.updateInput(e)} placeholder="Handle" />
-          </div>
+        <Row>
+          <Col sm={2}>
+            <ProfileImage profileImage={this.state.profileImage} doProfileImageUpload={this.doProfileImageUpload} />
+          </Col>
+          <Col sm={10}>
+            <form>
+              <div className="form-group">
+                <input type="text" name="handle" className="form-control" value={this.state.handle} onChange={this.updateInput} placeholder="Handle" />
+              </div>
 
-          <div className="form-group">
-            <input type="email" name="email" className="form-control" value={this.state.email} onChange={(e) => this.updateInput(e)} placeholder="Email" />
-          </div>
+              <div className="form-group">
+                <input type="email" name="email" className="form-control" value={this.state.email} onChange={this.updateInput} placeholder="Email" />
+              </div>
 
-          <div className="form-group">
-            <input type="password" name="password" className="form-control" value="******" readOnly />
-            <Link to="/resetpassword">Reset Password</Link>
-          </div>
+              <div className="form-group">
+                <input type="password" name="password" className="form-control" value="******" readOnly />
+                <Link to="/changepassword">Change Password</Link>
+              </div>
 
-          <div className="form-group">
-            <button type="button" className="btn btn-primary yapper-btn-primary" onClick={() => this.doProfileUpdate()}>Update Profile Info</button>
-          </div>
-        </form>
-      </div>
+              <div className="form-group">
+                <button type="button" className="btn btn-primary yapper-btn-primary" onClick={this.doProfileUpdate}>Update Profile Info</button>
+              </div>
+            </form>
+          </Col>
+        </Row>
+      </Container>
       
-
     );
   }
   

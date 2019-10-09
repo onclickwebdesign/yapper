@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/onclickwebdesign/yapper#readme",
   "dependencies": {
+    "aws-sdk": "^2.545.0",
     "connect-flash": "^0.1.1",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

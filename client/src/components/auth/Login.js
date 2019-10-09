@@ -22,7 +22,7 @@ class Login extends Component {
     const password = this.state.password;
 
     try {
-      const response = await fetch('http://localhost:3002/auth/login', { 
+      const response = await fetch('/auth/login', { 
         method: 'POST', 
         headers: {
           //'Authorization': `Token ${token}`,
