@@ -6,7 +6,8 @@ const User = mongoose.model('User');
 router.post('/register', async (req, res) => {
   let user = new User({
     email: req.body.email,
-    handle: req.body.handle
+    handle: req.body.handle,
+    fullName: req.body.fullName
   });
 
   console.log('from /register server route: ', req.body);

@@ -39,7 +39,7 @@ const LeftNav = props => {
           </LeftNavLink>
         </li>
         <li>
-          <LeftNavLink activeStyle={active} to="/">
+          <LeftNavLink activeStyle={active} exact to="/">
             <span style={faStyles} className="fa fa-home"></span> Home
           </LeftNavLink>
         </li>

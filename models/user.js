@@ -9,6 +9,7 @@ const UserSchema = new Schema({
   hash: String,
   salt: String,
   handle: String,
+  fullName: String,
   date: {
     type: Date,
     default: Date.now

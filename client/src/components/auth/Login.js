@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-bootstrap';
 
 class Login extends Component {
   constructor(props) {
@@ -11,13 +10,13 @@ class Login extends Component {
     };
   }
 
-  updateInput(e) {
+  updateInput = e => {
     const newState = {};
     newState[e.target.name] = e.target.value;
     this.setState(newState);
   }
 
-  async doLogin() {
+  doLogin = async () => {
     const email = this.state.email;
     const password = this.state.password;
 
@@ -51,15 +50,15 @@ class Login extends Component {
     return (
       <form>
         <div className="form-group">
-          <input type="email" name="email" className="form-control" value={this.state.email} onChange={(e) => this.updateInput(e)} placeholder="Email" />
+          <input type="email" name="email" className="form-control" value={this.state.email} onChange={this.updateInput} placeholder="Email" />
         </div>
 
         <div className="form-group">
-          <input type="password" name="password" className="form-control" value={this.state.password} onChange={(e) => this.updateInput(e)} placeholder="Password" />
+          <input type="password" name="password" className="form-control" value={this.state.password} onChange={this.updateInput} placeholder="Password" />
         </div>
 
         <div className="form-group">
-          <button id="login-button" type="button" onClick={() => this.doLogin()}>Log In!</button>
+          <button id="login-button" type="button" onClick={this.doLogin}>Log In!</button>
         </div>
       </form>
     );

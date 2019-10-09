@@ -24,7 +24,7 @@ class Profile extends Component {
       console.log('not authorized to view this page...');
     } else {
       try {
-        const response = await fetch(`/api/user?id=${this.state.id}`, { 
+        const response = await fetch('/api/user', { 
           method: 'GET', 
           headers: {
             'Authorization': `Token ${this.state.token}`,
@@ -45,7 +45,8 @@ class Profile extends Component {
         console.log('json is: ', json);
   
         this.setState({
-          handle: json.handle
+          fullName: json.fullName,
+          yipCount: json.yipCount
         });
   
       } catch (err) {
@@ -87,15 +88,14 @@ class Profile extends Component {
   }
 
   render() {
-    const greeting = <h1 className="text-center">{ this.state.token ? `Welcome ${this.state.handle}!` : `Unauthorized` }</h1>;
+    
     return (
-      <Container>
-        { greeting }
+      <Container style={{borderTop:'1px solid #fff', marginTop:'1rem', paddingTop:'2rem'}}>
         <Row>
-          <Col sm={2}>
+          <Col sm={3}>
             <ProfileImage profileImage={this.state.profileImage} doProfileImageUpload={this.doProfileImageUpload} />
           </Col>
-          <Col sm={10}>
+          <Col sm={9}>
             <form>
               <div className="form-group">
                 <input type="text" name="handle" className="form-control" value={this.state.handle} onChange={this.updateInput} placeholder="Handle" />

@@ -19,7 +19,7 @@ const imageUploaderStyles = {
   borderRadius: 10,
   borderTopLeftRadius: 0,
   borderTopRightRadius: 0,
-  fontSize: '2rem'
+  fontSize: '1.25rem'
 }
 
 const Image = styled.img`
@@ -34,12 +34,13 @@ const ProfileImage = props => {
   return (
     <ImageContainer>
       <ImageUploader 
-        fileContainerStyle={{background:'transparent', height:'30%', ...imageUploaderStyles}} 
+        fileContainerStyle={{background:'transparent', height:'35%', ...imageUploaderStyles}} 
         buttonStyles={{background: 'rgba(0, 0, 0, 0.6)', height:'100%', display:'flex', justifyContent:'space-around', ...imageUploaderStyles}} 
         withLabel={false} 
         withIcon={false} 
         singleImage={true} 
-        buttonText={<span style={{fontSize:'1rem'}} className="fa fa-edit"></span>} 
+        buttonClassName="fa fa-edit"
+        buttonText='' 
         onChange={props.doProfileImageUpload} 
         imgExtension={['.jpg', '.png', '.jpeg']} 
         maxFileSize={3000000} />

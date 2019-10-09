@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const Yip = mongoose.model('Yip');
 const verify = require('./verify');
 const util = require('../../util/utilities');
 
@@ -13,6 +14,7 @@ router.get('/', verify.required, async (req, res) => {
 
   let err;
   const user = await User.findById(id).catch(e => err = e);
+  const yips = await Yip.find({userId: id}).catch(e => err = e);
 
   if (err) {
     console.error('Mongo error: ', err);
@@ -25,9 +27,11 @@ router.get('/', verify.required, async (req, res) => {
   }
 
   res.status(200).json({
+    fullName: user.fullName,
     handle: user.handle,
     email: user.email,
-    account: user.account
+    account: user.account,
+    yipCount: yips.length
   });
 });
 
