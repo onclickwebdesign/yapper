@@ -85,6 +85,9 @@ class Profile extends Component {
       });
       
       const json = await response.json();
+      const session = JSON.parse(localStorage.getItem('usersession'));
+      session.profileImage = json.profileImage;
+      localStorage.setItem('usersession', JSON.stringify(session));
       this.setState({ profileImage: json.profileImage });
     }
   }

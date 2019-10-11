@@ -55,7 +55,7 @@ const Yip = props => {
     <YipContainer>
       <YipBody>
         <Link to={`/${props.handle}`} style={{width:50,borderRadius:30,overFlow:'hidden'}}>
-          <img style={{width:'100%'}} src={props.userImage} alt="Yapper User" />
+          <img style={{width:'100%'}} src={props.profileImage} alt="Yapper User" />
         </Link>
       
         <div style={{width:'100%',paddingLeft:'0.5rem'}}>

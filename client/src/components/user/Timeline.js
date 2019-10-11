@@ -4,14 +4,15 @@ import Yip from '../yip/Yip';
 class Timeline extends React.Component {
   constructor(props) {
     super(props);
-    console.log('Timeline: ', props);
+    const session = JSON.parse(localStorage.getItem('usersession'));
     this.state = {
-      yips: []
+      yips: [],
+      profileImage: session ? session.profileImage : '',
+      handle: session ? session.handle : '',
     };
   }
 
   async componentDidMount() {
-    console.log('Timeline componentDidMount()');
     // pull user's Yips from API...
     const response = await fetch('/api/yip/', { 
       method: 'GET', 
@@ -22,9 +23,6 @@ class Timeline extends React.Component {
     });
 
     const result = await response.json();
-
-    console.log('response: ', result);
-
     const yips = [
       {
         _id: 'asdf234asdf',
@@ -37,21 +35,9 @@ class Timeline extends React.Component {
         yipBackCount: 25,
         likeCount: 2502,
         shareCount: 45
-      },
-      {
-        _id: 'jjkl567jkl',
-        handle: 'AlexanderTheGreat', 
-        userImage: 'https://lh3.googleusercontent.com/-_ZC3oNfwBHA/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rcv3ad4_B22__TjYsyyY0zQAvBELg.CMID/s96-c/photo.jpg',
-        body: 'Well what do you know, I am actually taking the time to basically rebuild this application to further cement my development skills.',
-        bodyImage: 'https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.explicit.bing.net%2Fth%3Fid%3DOIP.sY6n8tXJKs-2tnZNSrFr2gHaE8%26pid%3DApi&f=1',
-        timeStamp: '4h',
-        replyCount: 120,
-        yipBackCount: 425,
-        likeCount: 25024,
-        shareCount: 85
       }
     ];
-    this.setState({yips});
+    this.setState({yips: result.yips});
   }
 
   handleSubmitYip = event => {
@@ -61,7 +47,11 @@ class Timeline extends React.Component {
 
   render() {
     return (
-      this.state.yips.map(yip => <Yip {...yip} key={yip._id} />)
+      this.state.yips.map(yip => {
+        yip.profileImage = this.state.profileImage;
+        yip.handle = this.state.handle;
+        return <Yip {...yip} key={yip._id} />;
+      })
     );
   }
 }

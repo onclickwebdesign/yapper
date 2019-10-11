@@ -16,11 +16,11 @@ router.post('/login', passport.authenticate('local'), async (req, res, next) => 
   } else {
     // get user profile pic from s3 bucket
     console.log('on login user id: ', req.user.id);
-    const profileImage = await s3.getObject({Bucket: 'yapper-bucket', Key: req.user.id + '/'})
-    console.log('user image is: ', profileImage);
+    //const profileImage = await s3.getObject({Bucket: 'yapper-bucket', Key: req.user.id + '/'})
+    console.log('user image is: ', req.user.profileImage);
     res.status(200).json({
-      user: { profileImage, ...req.user.toAuthJSON() },
-      redirect: `${process.env.webUrl}?success=ya` 
+      user: { profileImage: req.user.profileImage, ...req.user.toAuthJSON() },
+      redirect: '/' 
     });
   }
 });

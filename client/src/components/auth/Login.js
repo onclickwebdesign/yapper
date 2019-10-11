@@ -32,11 +32,12 @@ class Login extends Component {
 
       let json;
 
-      if (response.status === 401) {
+      if (response.status === 403) {
         json = { msg: 'Email or password is incorrect.' };
       } else {
         json = await response.json();
-        localStorage.setItem('usersession', JSON.stringify(json));
+        localStorage.setItem('usersession', JSON.stringify(json.user));
+        window.location.href = json.redirect;
       }
       
       console.log('json is: ', json);
