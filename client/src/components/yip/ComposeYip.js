@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import SearchHashTag from './SearchHashTag';
-import SearchAt from './SearchAt';
+// import SearchHashTag from './SearchHashTag';
+// import SearchAt from './SearchAt';
 import styled from 'styled-components';
 import constants from '../../util/constants';
 
@@ -72,7 +72,7 @@ const GifIcon = styled.span`
 class ComposeYip extends Component {
   constructor(props) {
     super(props);
-    console.log('ComposeYip ', props);
+    
     this.state = {
       yipBody: '',
       user: props

@@ -11,7 +11,7 @@ class Home extends Component {
   constructor(props) {
     super(props);
     const session = JSON.parse(localStorage.getItem('usersession'));
-    console.log('session is: ', session);
+    
     this.state = {
       handle: session ? session.handle : '',
       email: session ? session.email : '',

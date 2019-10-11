@@ -11,6 +11,7 @@ class Timeline extends React.Component {
   }
 
   async componentDidMount() {
+    console.log('Timeline componentDidMount()');
     // pull user's Yips from API...
     const response = await fetch('/api/yip/', { 
       method: 'GET', 

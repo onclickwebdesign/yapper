@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const morgan = require('morgan');
 const path = require('path');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
@@ -14,7 +16,10 @@ require('./models');
 require('./config/passport')(passport);
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// app.use(express.json());
+app.use(bodyParser.json());
+
+app.use(morgan());
 
 // Express Session
 app.use(session({

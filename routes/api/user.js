@@ -3,14 +3,11 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Yip = mongoose.model('Yip');
 const verify = require('./verify');
-const util = require('../../util/utilities');
+const { s3upload } = require('../../util/utilities');
 
 // get currently logged in user
 router.get('/', verify.required, async (req, res) => {
-  console.log('req.payload is: ', req.payload);
-  
   const { payload: { id } } = req;
-  console.log('id is: ', id);
 
   let err;
   const user = await User.findById(id).catch(e => err = e);
@@ -30,23 +27,26 @@ router.get('/', verify.required, async (req, res) => {
     fullName: user.fullName,
     handle: user.handle,
     email: user.email,
+    profileImage: user.profileImage,
     account: user.account,
     yipCount: yips.length
   });
 });
 
 router.post('/updateprofilepicture', verify.required, async (req, res) => {
-  console.log(req.body);
-  console.log('payload: ', req.payload);
-  const params = {
-    Key: req.payload.id + '/',
-    Bucket: 'yapper-bucket',
-    Body: req.body
-  };
+  const singleUpload = s3upload.single('profileImage');
+  const { payload: { id } } = req;
+  
+  singleUpload(req, res, async err => {
+    if (err) {
+      return res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}]}); 
+    }
 
-  const result = await util.s3.putObject(params);
-  console.log('s3 result: ', result);
-  res.status(200).json({ success: true, result });
+    const profileImage = req.file ? req.file.location : 'Location_not_defined';
+
+    const user = await User.findByIdAndUpdate(id, { profileImage }, { new: true }).catch(e => err = e);
+    res.status(200).json({ success: true, message: 'Image uploaded successfully.', profileImage });
+  });
 });
 
 router.post('/updateprofile', verify.required, async (req, res) => {

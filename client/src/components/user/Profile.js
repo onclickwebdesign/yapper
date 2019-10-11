@@ -7,19 +7,18 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     const session = JSON.parse(localStorage.getItem('usersession'));
-    console.log('session is: ', session);
+    
     this.state = {
       handle: session ? session.handle : '',
       email: session ? session.email : '',
       profileImage: session ? session.profileImage: '',
       token: session ? session.token : '',
       id: session ? session._id: '',
+      imageUploader: ''
     };
   }
 
   async componentDidMount() {
-    console.log('componentDidMount');
-
     if (!this.state.token) {
       console.log('not authorized to view this page...');
     } else {
@@ -34,19 +33,18 @@ class Profile extends Component {
   
         let json;
   
-        console.log('response is: ', response);
-  
         if (response.status === 200) {
           json = await response.json();
         } else {
           json = { msg: 'Error retrieving user profile info.' };
         }
-
-        console.log('json is: ', json);
   
         this.setState({
+          email: json.email,
+          handle: json.handle,
           fullName: json.fullName,
-          yipCount: json.yipCount
+          yipCount: json.yipCount,
+          profileImage: json.profileImage
         });
   
       } catch (err) {
@@ -61,21 +59,22 @@ class Profile extends Component {
   }
 
   doProfileImageUpload = async image => {
-    console.log('image: ', image);
-    // fetch here..
-    
     if (image.length > 0) {
+      const imageFile = image[image.length - 1];
+      const fd = new FormData();
+      fd.set('Content-Type', imageFile.type);
+      fd.set('profileImage', imageFile);
+
       const response = await fetch('/api/user/updateprofilepicture', { 
         method: 'POST', 
         headers: {
-          'Authorization': `Token ${this.state.token}`,
-          'Content-Type': 'application/json',
+          'Authorization': `Token ${this.state.token}`
         },
-        body: image[0]
+        body: fd
       });
       
       const json = await response.json();
-      console.log('update profile json: ', json);
+      this.setState({ profileImage: json.profileImage });
     }
   }
 
@@ -102,7 +101,6 @@ class Profile extends Component {
   }
 
   render() {
-    
     return (
       <Container style={{borderTop:'1px solid #fff', marginTop:'1rem', paddingTop:'2rem'}}>
         <Row>
@@ -134,7 +132,6 @@ class Profile extends Component {
       
     );
   }
-  
 }
 
 export default Profile;

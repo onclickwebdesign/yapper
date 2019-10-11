@@ -4,7 +4,6 @@ import ImageUploader from 'react-images-upload';
 
 const ImageContainer = styled.div`
   position: relative;
-
 `;
 
 const imageUploaderStyles = {
@@ -28,9 +27,6 @@ const Image = styled.img`
   position: relative;
 `;
 const ProfileImage = props => {
-  console.log('props: ', props);
-  const imageT = 'https://lh3.googleusercontent.com/-_ZC3oNfwBHA/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rcv3ad4_B22__TjYsyyY0zQAvBELg.CMID/s96-c/photo.jpg';
-
   return (
     <ImageContainer>
       <ImageUploader 
@@ -46,8 +42,7 @@ const ProfileImage = props => {
         imgExtension={['.jpg', '.png', '.jpeg']} 
         maxFileSize={3000000} />
 
-      {/* <Image src={props.profileImage} alt="User Profile Image" /> */}
-      <Image src={imageT} alt="User Profile Image" />
+      <Image src={props.profileImage} alt="User Profile Image" />
     </ImageContainer>
   );
 };

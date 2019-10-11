@@ -10,6 +10,7 @@ const UserSchema = new Schema({
   salt: String,
   handle: String,
   fullName: String,
+  profileImage: String,
   date: {
     type: Date,
     default: Date.now
