@@ -11,12 +11,17 @@ const UserSchema = new Schema({
   handle: String,
   fullName: String,
   profileImage: String,
+  landscapeImage: String,
+  locationCity: String,
+  locationState: String,
+  occupation: String,
+  employer: String,
   date: {
     type: Date,
     default: Date.now
   },
   following: [Schema.Types.ObjectId],
-  followers: Number,
+  followers: [Schema.Types.ObjectId],
   // yips: [{
   //   type: Schema.Types.ObjectId,
   //   ref: "Yip"

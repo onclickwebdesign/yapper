@@ -80,12 +80,6 @@ header {
   background: #3C3C3B;
 }
 
-main {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
 #yapper-wrapper > section.no-auth {
   width: 50%;
 }

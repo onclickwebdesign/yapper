@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.use(express.json());
 app.use(bodyParser.json());
 
-app.use(morgan());
+app.use(morgan('combined'));
 
 // Express Session
 app.use(session({
@@ -45,7 +45,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Configure Mongoose
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/yapper', { useNewUrlParser: true}).then(
+mongoose.connect(process.env.mongo_cluster_connection || 'mongodb://localhost/yapper', { useNewUrlParser: true}).then(
   () => console.log('MongoDB Connected..')
 ).catch(err => console.error(err));
 

@@ -12,19 +12,26 @@ const HomeSection = styled.div`
   position: relative;
 `;
 
+const MainSection = styled.main`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-left: 200px;
+`;
+
 const UserHome = props => {
   return (
     <section style={{background:'#3C3C3B'}}>
       <HomeSection>
         <LeftNav />
 
-        <main>
-          <div style={{width:'60%', border:'1px solid #fff'}}>
+        <MainSection>
+          <div style={{width:'95%', border:'1px solid #fff'}}>
             <ComposeYip {...props} />
             <Route exact path="/" component={() => <Timeline {...props} />} />
             <Route exact path="/profile" component={Profile} />
           </div>
-        </main>
+        </MainSection>
 
       </HomeSection>
     </section>

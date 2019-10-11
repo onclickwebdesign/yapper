@@ -17,13 +17,11 @@ const PositionedImage = styled.div`
 
 const Flex = styled.div`
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
 `;
 
 const FlexItem = styled.div`
-  width: 50%;
-  margin-top: 5px;
+  margin: 5px 10px 0 0;
 `;
 
 const white = {
@@ -31,11 +29,10 @@ const white = {
 };
 
 const lightened = {
-  opacity: '0.75'
+  opacity: '0.35'
 };
 
 const ProfileInfo = props => {
-  console.log('profileInfo props: ', props);
   return (
     <ProfileInfoContainer>
       <PositionedImage>
@@ -44,12 +41,13 @@ const ProfileInfo = props => {
 
       <h4 style={{marginBottom:5}}>{props.fullName} <span className="fa fa-lock"></span></h4>
       <div style={lightened}>@{props.handle}</div>
-      <div style={{margin:'10px 0'}}>{props.occupation}</div>
+      <div style={{margin:'10px 0'}}>{props.occupation} at {props.employer}</div>
       <Flex>
-        <FlexItem style={lightened}><span className="fa fa-location"></span> {props.location}</FlexItem>
+        <FlexItem style={lightened}><span className="fas fa-map-marker-alt"></span> {props.locationCity}, {props.locationState}</FlexItem>
         <FlexItem style={lightened}><span className="fa fa-calendar"></span> Joined {props.dateJoined}</FlexItem>
-
-        <FlexItem><Link style={white} to={`/${props.handle}/following`}><strong>{props.followingCount}</strong> <span style={lightened}>Following</span></Link></FlexItem>
+      </Flex>
+      <Flex>
+        <FlexItem style={{marginRight:20}}><Link style={white} to={`/${props.handle}/following`}><strong>{props.followingCount}</strong> <span style={lightened}>Following</span></Link></FlexItem>
         <FlexItem><Link style={white} to={`/${props.handle}/followers`}><strong>{props.followerCount}</strong> <span style={lightened}>Followers</span></Link></FlexItem>
       </Flex>
     </ProfileInfoContainer>

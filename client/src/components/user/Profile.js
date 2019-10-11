@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { Col, Row, Container } from 'react-bootstrap';
 import ProfileImage from './ProfileImage';
 import ProfileLandscape from './ProfileLandscape';
 import ProfileInfo from './ProfileInfo';
+import EditProfile from './EditProfile';
+import constants from '../../util/constants';
 
 class Profile extends Component {
   constructor(props) {
@@ -17,12 +18,13 @@ class Profile extends Component {
       landscapeImage: '',
       followerCount: 0,
       followingCount: 0,
-      dateJoined: 'August 2019',
-      location: 'Seattle, WA',
-      occupation: 'Web Development Engineer at Amazon Web Services',
+      dateJoined: '',
+      locationCity: '',
+      locationState: '',
+      occupation: '',
+      employer: '',
       token: session ? session.token : '',
       id: session ? session._id: '',
-      imageUploader: ''
     };
   }
 
@@ -43,18 +45,18 @@ class Profile extends Component {
   
         if (response.status === 200) {
           json = await response.json();
+        } else if (response.status === 404) {
+          // user not found in our system, so wipe browser session
+          localStorage.removeItem('usersession');
+          window.location.href = '/';
         } else {
           json = { msg: 'Error retrieving user profile info.' };
         }
+
+        console.log('user; ', json);
+        const { email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined } = json;
   
-        this.setState({
-          email: json.email,
-          handle: json.handle,
-          fullName: json.fullName,
-          yipCount: json.yipCount,
-          profileImage: json.profileImage,
-          landscapeImage: json.landscapeImage
-        });
+        this.setState({ email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined });
   
       } catch (err) {
         console.error('Something bad happened: ', err);
@@ -108,8 +110,7 @@ class Profile extends Component {
   }
 
   doProfileUpdate = async () => {
-    const email = this.state.email;
-    const handle = this.state.handle;
+    const { fullName, email, occupation, employer, locationCity, locationState } = this.state;
 
     try {
       const response = await fetch('/api/user/updateprofile', { 
@@ -118,7 +119,7 @@ class Profile extends Component {
           'Authorization': `Token ${this.state.token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, handle })
+        body: JSON.stringify({ fullName, email, occupation, employer, locationCity, locationState })
       });
       
       const json = await response.json();
@@ -135,32 +136,14 @@ class Profile extends Component {
         <section>
           <ProfileLandscape landscapeImage={this.state.landscapeImage} doLandscapeImageUpload={this.doLandscapeImageUpload} />
           <ProfileInfo {...this.state}>
-            <ProfileImage profileImage={this.state.profileImage} doProfileImageUpload={this.doProfileImageUpload} />
+            <ProfileImage profileImage={this.state.profileImage || constants.DEFAULT_USER_IMAGE} doProfileImageUpload={this.doProfileImageUpload} />
           </ProfileInfo>
         </section>
       
         <Container style={{borderTop:'1px solid #fff', marginTop:'1rem', paddingTop:'2rem'}}>
           <Row>
             <Col sm={12}>
-              <h4 style={{marginBottom:'1rem'}}>Edit Profile Info</h4>
-              <form style={{padding:0, margin:0}}>
-                <div className="form-group">
-                  <input type="text" name="handle" className="form-control" value={this.state.handle} onChange={this.updateInput} placeholder="Handle" />
-                </div>
-
-                <div className="form-group">
-                  <input type="email" name="email" className="form-control" value={this.state.email} onChange={this.updateInput} placeholder="Email" />
-                </div>
-
-                <div className="form-group">
-                  <input type="password" name="password" className="form-control" value="******" readOnly />
-                  <Link to="/changepassword">Change Password</Link>
-                </div>
-
-                <div className="form-group">
-                  <button type="button" className="btn btn-primary yapper-btn-primary" onClick={this.doProfileUpdate}>Update Profile Info</button>
-                </div>
-              </form>
+              <EditProfile updateInput={this.updateInput} doProfileUpdate={this.doProfileUpdate} {...this.state} />
             </Col>
           </Row>
         </Container>

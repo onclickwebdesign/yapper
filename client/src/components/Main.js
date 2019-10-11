@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from './Logo';
 
+const MainSection = styled.main`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;
+
 const Title = styled.h1`
   font-size: 1.75rem;
 `;
@@ -18,7 +24,7 @@ const Section = styled.section`
 
 const Main = props => {
   return (
-    <main>
+    <MainSection>
       <Section className="no-auth">
         <ul>
           <li><span className="fa fa-hashtag"></span> Explore trending topics and interesting discussions.</li>
@@ -37,7 +43,7 @@ const Main = props => {
           <Link to="/login" style={{width:'100%'}} className="btn btn-primary yapper-btn-primary">Log in</Link>
         </div>
       </Section>
-    </main>
+    </MainSection>
   );
 };
 

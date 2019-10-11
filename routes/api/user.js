@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Yip = mongoose.model('Yip');
 const verify = require('./verify');
-const { s3upload } = require('../../util/utilities');
+const { s3upload, getMonthName } = require('../../util/utilities');
 
 // get currently logged in user
 router.get('/', verify.required, async (req, res) => {
@@ -18,18 +18,22 @@ router.get('/', verify.required, async (req, res) => {
   }
 
   if (!user) {
-    res.status(200).json({
+    res.status(404).json({
       msg: 'No user was found'
     });
   }
 
+  const { email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation } = user;
+
+  const joinedDate = new Date(user.date);
+
   res.status(200).json({
-    fullName: user.fullName,
-    handle: user.handle,
-    email: user.email,
-    profileImage: user.profileImage,
+    email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation,
     account: user.account,
-    yipCount: yips.length
+    yipCount: yips.length,
+    followerCount: user.followers.length,
+    followingCount: user.following.length,
+    dateJoined: `${getMonthName(joinedDate.getMonth())} ${joinedDate.getFullYear()}`
   });
 });
 
@@ -51,8 +55,9 @@ router.post('/updateprofilepicture', verify.required, async (req, res) => {
 
 router.post('/updateprofile', verify.required, async (req, res) => {
   console.log('req body: ', req.body);
-
-  res.send('boomshakalaka');
+  const { payload: { id } } = req;
+  const user = await User.findByIdAndUpdate(id, req.body, { new: true }).catch(e => err = e);
+  res.status(200).json({ success: true, message: 'Profile updated successfully.', user });
 });
 
 module.exports = router;

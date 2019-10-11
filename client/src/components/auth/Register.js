@@ -12,11 +12,12 @@ class Register extends Component {
     };
   }
 
-  updateInput = ({name, value}) => {
+  updateInput = (event) => {
+    const { name, value } = event.target;
     this.setState({[name]: value});
   }
 
-  async doRegister() {
+  doRegister = async () => {
     const fullName = this.state.fullName;
     const handle = this.state.handle;
     const email = this.state.email;
