@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Col, Row, Container } from 'react-bootstrap';
 import ProfileImage from './ProfileImage';
+import ProfileLandscape from './ProfileLandscape';
+import ProfileInfo from './ProfileInfo';
 
 class Profile extends Component {
   constructor(props) {
@@ -12,6 +14,12 @@ class Profile extends Component {
       handle: session ? session.handle : '',
       email: session ? session.email : '',
       profileImage: session ? session.profileImage: '',
+      landscapeImage: '',
+      followerCount: 0,
+      followingCount: 0,
+      dateJoined: 'August 2019',
+      location: 'Seattle, WA',
+      occupation: 'Web Development Engineer at Amazon Web Services',
       token: session ? session.token : '',
       id: session ? session._id: '',
       imageUploader: ''
@@ -44,7 +52,8 @@ class Profile extends Component {
           handle: json.handle,
           fullName: json.fullName,
           yipCount: json.yipCount,
-          profileImage: json.profileImage
+          profileImage: json.profileImage,
+          landscapeImage: json.landscapeImage
         });
   
       } catch (err) {
@@ -78,6 +87,26 @@ class Profile extends Component {
     }
   }
 
+  doLandscapeImageUpload = async image => {
+    if (image.length > 0) {
+      const imageFile = image[image.length - 1];
+      const fd = new FormData();
+      fd.set('Content-Type', imageFile.type);
+      fd.set('profileImage', imageFile);
+
+      const response = await fetch('/api/user/updateprofilelandscape', { 
+        method: 'POST', 
+        headers: {
+          'Authorization': `Token ${this.state.token}`
+        },
+        body: fd
+      });
+      
+      const json = await response.json();
+      this.setState({ landscapeImage: json.landscapeImage });
+    }
+  }
+
   doProfileUpdate = async () => {
     const email = this.state.email;
     const handle = this.state.handle;
@@ -102,34 +131,40 @@ class Profile extends Component {
 
   render() {
     return (
-      <Container style={{borderTop:'1px solid #fff', marginTop:'1rem', paddingTop:'2rem'}}>
-        <Row>
-          <Col sm={3}>
+      <div>
+        <section>
+          <ProfileLandscape landscapeImage={this.state.landscapeImage} doLandscapeImageUpload={this.doLandscapeImageUpload} />
+          <ProfileInfo {...this.state}>
             <ProfileImage profileImage={this.state.profileImage} doProfileImageUpload={this.doProfileImageUpload} />
-          </Col>
-          <Col sm={9}>
-            <form>
-              <div className="form-group">
-                <input type="text" name="handle" className="form-control" value={this.state.handle} onChange={this.updateInput} placeholder="Handle" />
-              </div>
-
-              <div className="form-group">
-                <input type="email" name="email" className="form-control" value={this.state.email} onChange={this.updateInput} placeholder="Email" />
-              </div>
-
-              <div className="form-group">
-                <input type="password" name="password" className="form-control" value="******" readOnly />
-                <Link to="/changepassword">Change Password</Link>
-              </div>
-
-              <div className="form-group">
-                <button type="button" className="btn btn-primary yapper-btn-primary" onClick={this.doProfileUpdate}>Update Profile Info</button>
-              </div>
-            </form>
-          </Col>
-        </Row>
-      </Container>
+          </ProfileInfo>
+        </section>
       
+        <Container style={{borderTop:'1px solid #fff', marginTop:'1rem', paddingTop:'2rem'}}>
+          <Row>
+            <Col sm={12}>
+              <h4 style={{marginBottom:'1rem'}}>Edit Profile Info</h4>
+              <form style={{padding:0, margin:0}}>
+                <div className="form-group">
+                  <input type="text" name="handle" className="form-control" value={this.state.handle} onChange={this.updateInput} placeholder="Handle" />
+                </div>
+
+                <div className="form-group">
+                  <input type="email" name="email" className="form-control" value={this.state.email} onChange={this.updateInput} placeholder="Email" />
+                </div>
+
+                <div className="form-group">
+                  <input type="password" name="password" className="form-control" value="******" readOnly />
+                  <Link to="/changepassword">Change Password</Link>
+                </div>
+
+                <div className="form-group">
+                  <button type="button" className="btn btn-primary yapper-btn-primary" onClick={this.doProfileUpdate}>Update Profile Info</button>
+                </div>
+              </form>
+            </Col>
+          </Row>
+        </Container>
+      </div>
     );
   }
 }
