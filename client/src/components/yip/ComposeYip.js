@@ -54,7 +54,7 @@ const TextArea = styled.div`
 `;
 
 const BodyImageContainer = styled.div`
-  display: flex;
+  margin-top: 1rem;
 `;
 
 const IconButton = styled.button`
@@ -109,7 +109,7 @@ class ComposeYip extends Component {
   }
 
   async componentDidMount() {
-    
+    document.getElementById('image-icon-button').appendChild(document.getElementById('filepond-browse'));
   }
 
   postYip = async () => {
@@ -143,6 +143,11 @@ class ComposeYip extends Component {
       bodyImages: images.map(img => img.file)
     });
   }
+  
+  triggerBrowse = () => {
+    console.log('dispatching click');
+    document.getElementById('filepond-browse').click(); //.dispatchEvent('click');
+  }
 
   handleGif = event => {
     console.log('handle gif..');
@@ -154,6 +159,7 @@ class ComposeYip extends Component {
 
   handleInit = () => {
     console.log('FilePond instance has initialised', this.pond);
+    //document.getElementById('image-icon-button').appendChild(document.getElementById('filepond-browse'));
   }
 
   render() {
@@ -176,9 +182,10 @@ class ComposeYip extends Component {
                 instantUpload="false"
                 labelInvalidField="Select jpg or png images only"
                 labelFileLoading="Hmm loading"
-                labelIdle=""
+                labelIdle='<span id="filepond-browse" class="filepond--label-action"></span>'
                 oninit={() => this.handleInit() }
-                onupdatefiles={(fileItems) => this.handleImages(fileItems)} />
+                onupdatefiles={(fileItems) => this.handleImages(fileItems)}>
+                </FilePond>
               
             </BodyImageContainer>
           </TextAreaContainer>
@@ -202,7 +209,9 @@ class ComposeYip extends Component {
               imgExtension={['.jpg', '.png', '.jpeg']} 
               maxFileSize={3000000} /> */}
 
-            <IconButton className="filepond--label-action"><span className="far fa-image" style={{verticalAlign:'bottom'}}></span></IconButton>
+            <IconButton id="image-icon-button" onClick={this.triggerBrowse}>
+              <span className="far fa-image" style={{verticalAlign:'bottom'}}></span>
+            </IconButton>
             <IconButton style={{display:'flex'}} onClick={this.handleGif}><GifIcon>GIF</GifIcon></IconButton>
             <IconButton onClick={this.handleEmoji} style={{fontSize:'1.5rem'}}><span className="far fa-smile" style={{verticalAlign:'bottom'}}></span></IconButton>
           </FlexContainer>

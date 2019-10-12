@@ -95,10 +95,39 @@ header {
   margin: 15px 0;
 }
 
+/* Start: compose yip styles */
 .compose-yip-image-upload:hover {
   background: rgba(0, 123, 255, 0.35) !important;
 }
 
-/* start: timeline styles */
+.filepond--root {
+  max-height: 250px;
+}
 
-/* end: timeline styles */
+.filepond--root .filepond--list-scroller {
+  transform: none !important;
+  margin: 0;
+  height: 100%;
+  position: relative;
+}
+
+.filepond--list.filepond--list {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  left: 0;
+  height: 100%;
+}
+
+.filepond--item {
+  margin: 0 !important;
+  position: relative;
+  transform: none !important;
+  width: 100%;
+}
+
+.filepond--panel.filepond--panel-root,
+.filepond--panel.filepond--item-panel {
+  display: none;
+}
+/* end: compose yip styles */
