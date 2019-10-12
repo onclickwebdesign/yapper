@@ -14,6 +14,24 @@ module.exports = {
       resolve();
     });
   },
+  getDaysHoursFromNow: date => {
+    const now = Date.now();
+    let timeString = '';
+    // const date = new Date(yip.createdDate);
+    let delta = (now - date) / 1000;
+    const days = Math.floor(delta / 86400);
+    timeString += days > 0 ? `${days}d ` : '';
+    delta -= days * 86400;
+
+    const hours = Math.floor(delta / 3600) % 24;
+    timeString += hours > 0 ? `${hours}h` : '';
+
+    if (days === 0 && hours === 0) {
+      timeString = 'Just now';
+    }
+
+    return timeString;
+  },
   getMonthName: monthNum => {
     switch (monthNum) {
       case 0:

@@ -4,7 +4,7 @@ import ProfileImage from './ProfileImage';
 import ProfileLandscape from './ProfileLandscape';
 import ProfileInfo from './ProfileInfo';
 import EditProfile from './EditProfile';
-import constants from '../../util/constants';
+import { constants, userApi } from '../../util';
 
 class Profile extends Component {
   constructor(props) {
@@ -33,31 +33,33 @@ class Profile extends Component {
       console.log('not authorized to view this page...');
     } else {
       try {
-        const response = await fetch('/api/user', { 
-          method: 'GET', 
-          headers: {
-            'Authorization': `Token ${this.state.token}`,
-            'Content-Type': 'application/json',
-          }
-        });
+        // const response = await fetch('/api/user', { 
+        //   method: 'GET', 
+        //   headers: {
+        //     'Authorization': `Token ${this.state.token}`,
+        //     'Content-Type': 'application/json',
+        //   }
+        // });
+
+        const response = await userApi.getUserWithSession(this.state.token);
   
         let json;
   
         if (response.status === 200) {
           json = await response.json();
+
+          console.log('user; ', json);
+          const { email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined } = json;
+          this.setState({ email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined });
         } else if (response.status === 404) {
           // user not found in our system, so wipe browser session
           localStorage.removeItem('usersession');
           window.location.href = '/';
         } else {
+          alert('Error retrieving user profile info. Please try again later.');
+          window.location.href = '/';
           json = { msg: 'Error retrieving user profile info.' };
         }
-
-        console.log('user; ', json);
-        const { email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined } = json;
-  
-        this.setState({ email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined });
-  
       } catch (err) {
         console.error('Something bad happened: ', err);
       }

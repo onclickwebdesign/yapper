@@ -3,21 +3,25 @@ const mongoose = require('mongoose');
 const Yip = mongoose.model('Yip');
 const User = mongoose.model('User');
 const verify = require('./verify');
+const utilities = require('../../util/utilities');
 
 // get all yips from logged in user
 router.get('/', verify.required, async (req, res) => {
   const { payload: { id } } = req;
   // const user = await User.findById(id).populate('yips').populate('yipBacks').populate('replys').catch(e => console.log('Error: ', e));
   // const user = await User.findById(id).populate('on');
+  
   let err;
   const yips = await Yip.find({userId: id}).catch(e => err = e);
+  const dateStampedYips = yips.map(yip => {
+    return { timeStamp: utilities.getDaysHoursFromNow(new Date(yip.createdDate)), ...yip._doc };
+  });
 
   if (err) {
     res.status(200).json({ success: false, message: 'Error retrieving Yips.' });
   }
 
-  console.log('user yips: ', yips);
-  res.status(200).json({ yips });
+  res.status(200).json({ yips: dateStampedYips });
 });
 
 // post a new yip

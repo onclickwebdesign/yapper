@@ -5,9 +5,10 @@ const { Schema } = mongoose;
 const YipSchema = new Schema({
   userId: Schema.Types.ObjectId,
   body: String,
-  yipBackCount: Number,
   createdDate: { type: Date, default: Date.now },
-  replyIds: [Number]
+  yipBackIds: [Schema.Types.ObjectId],
+  replyIds: [Schema.Types.ObjectId],
+  likeIds: [Schema.Types.ObjectId]
 });
 
 const Yip = mongoose.model('Yip', YipSchema);

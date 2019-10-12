@@ -24,7 +24,6 @@ class Login extends Component {
       const response = await fetch('/auth/login', { 
         method: 'POST', 
         headers: {
-          //'Authorization': `Token ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password })
@@ -39,9 +38,6 @@ class Login extends Component {
         localStorage.setItem('usersession', JSON.stringify(json.user));
         window.location.href = json.redirect;
       }
-      
-      console.log('json is: ', json);
-
     } catch (err) {
       console.error('Something bad happened: ', err);
     }
@@ -64,7 +60,6 @@ class Login extends Component {
       </form>
     );
   }
-  
 }
 
 export default Login;

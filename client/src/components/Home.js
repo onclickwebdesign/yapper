@@ -20,10 +20,6 @@ class Home extends Component {
     };
   }
 
-  async componentDidMount() {
-    
-  }
-
   getMainRender = () => {
     const app = this.state.token ? (
       <BrowserRouter>

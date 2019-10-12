@@ -51,7 +51,6 @@ const ProfileInfo = props => {
         <FlexItem><Link style={white} to={`/${props.handle}/followers`}><strong>{props.followerCount}</strong> <span style={lightened}>Followers</span></Link></FlexItem>
       </Flex>
     </ProfileInfoContainer>
-
   )
 };
 

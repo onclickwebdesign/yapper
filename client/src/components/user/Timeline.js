@@ -1,5 +1,6 @@
 import React from 'react';
 import Yip from '../yip/Yip';
+import { constants, userApi, yipApi } from '../../util';
 
 class Timeline extends React.Component {
   constructor(props) {
@@ -7,22 +8,21 @@ class Timeline extends React.Component {
     const session = JSON.parse(localStorage.getItem('usersession'));
     this.state = {
       yips: [],
-      profileImage: session ? session.profileImage : '',
+      profileImage: session ? session.profileImage : constants.DEFAULT_USER_IMAGE,
       handle: session ? session.handle : '',
+      fullName: ''
     };
   }
 
   async componentDidMount() {
-    // pull user's Yips from API...
-    const response = await fetch('/api/yip/', { 
-      method: 'GET', 
-      headers: {
-        'Authorization': `Token ${this.props.token}`,
-        'Content-Type': 'application/json',
-      }
-    });
+    const userPromise = await userApi.getUserWithSession(this.props.token);
+    const user = await userPromise.json();
 
+
+    const response = await yipApi.getAuthUserYips(this.props.token);
     const result = await response.json();
+    console.log('yips: ', result);
+
     const yips = [
       {
         _id: 'asdf234asdf',
@@ -37,12 +37,7 @@ class Timeline extends React.Component {
         shareCount: 45
       }
     ];
-    this.setState({yips: result.yips});
-  }
-
-  handleSubmitYip = event => {
-    console.log('yip submitted..');
-    // save to db
+    this.setState({fullName: user.fullName, yips: result.yips});
   }
 
   render() {
@@ -50,6 +45,7 @@ class Timeline extends React.Component {
       this.state.yips.map(yip => {
         yip.profileImage = this.state.profileImage;
         yip.handle = this.state.handle;
+        yip.fullName = this.state.fullName;
         return <Yip {...yip} key={yip._id} />;
       })
     );

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { LightenedText } from '../styled';
 
 const YipContainer = styled.div`
   padding: 1rem 1rem 0;
@@ -59,7 +60,7 @@ const Yip = props => {
         </Link>
       
         <div style={{width:'100%',paddingLeft:'0.5rem'}}>
-          <Link to={`/${props.handle}`}>{props.handle}</Link>
+          <Link style={{color:'#fff',fontWeight:'700'}} to={`/${props.handle}`}>{props.fullName} <LightenedText>@{props.handle}</LightenedText></Link>
           <YipTimeStamp>{props.timeStamp}</YipTimeStamp>
         
           <YipParagraph>{props.body}</YipParagraph>
@@ -67,10 +68,10 @@ const Yip = props => {
         </div>
       </YipBody>
       <YipFooter className="no-margin">
-        <LiStyled><YipFooterButton><span className="fa fa-comment"></span> {props.replyCount}</YipFooterButton></LiStyled>
-        <LiStyled><YipFooterButton><span className="fas fa-bullhorn"></span> {props.yipBackCount}</YipFooterButton></LiStyled>
-        <LiStyled><YipFooterButton><span className="fa fa-heart"></span> {props.likeCount}</YipFooterButton></LiStyled>
-        <LiStyled><YipFooterButton><span className="fa fa-share"></span> {props.shareCount}</YipFooterButton></LiStyled>
+        <LiStyled><YipFooterButton><span className="fa fa-comment"></span> {props.replyIds.length}</YipFooterButton></LiStyled>
+        <LiStyled><YipFooterButton><span className="fas fa-bullhorn"></span> {props.yipBackIds.length}</YipFooterButton></LiStyled>
+        <LiStyled><YipFooterButton><span className="fa fa-heart"></span> {props.likeIds.length}</YipFooterButton></LiStyled>
+        <LiStyled><YipFooterButton><span className="fa fa-share"></span></YipFooterButton></LiStyled>
       </YipFooter>
     </YipContainer>
   );
