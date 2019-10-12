@@ -36,3 +36,9 @@ export const MaterialInput = styled.input`
 export const LightenedText = styled.span`
   opacity: 0.35;
 `;
+
+export const Avatar = styled.img`
+  border-radius: 30px;
+  width: 50px;
+  height: 50px;
+`;

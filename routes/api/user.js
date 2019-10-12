@@ -37,9 +37,13 @@ router.get('/', verify.required, async (req, res) => {
   });
 });
 
-router.post('/updateprofilepicture', verify.required, async (req, res) => {
-  const singleUpload = s3upload.single('profileImage');
+router.post('/updateprofilepicture/:type', verify.required, async (req, res) => {
+  
+  const singleUpload = s3upload.single(req.params.type);
   const { payload: { id } } = req;
+  req.s3Path = `${id}/profile/${req.params.type}-${Date.now().toString()}`;
+
+  console.log(JSON.stringify(req.s3Path));
   
   singleUpload(req, res, async err => {
     if (err) {

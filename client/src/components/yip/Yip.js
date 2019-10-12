@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { LightenedText } from '../styled';
+import { LightenedText, Avatar } from '../styled';
 
 const YipContainer = styled.div`
   padding: 1rem 1rem 0;
@@ -56,11 +56,11 @@ const Yip = props => {
     <YipContainer>
       <YipBody>
         <Link to={`/${props.handle}`} style={{width:50,borderRadius:30,overFlow:'hidden'}}>
-          <img style={{width:'100%'}} src={props.profileImage} alt="Yapper User" />
+          <Avatar src={props.profileImage} alt="Yapper User" />
         </Link>
       
         <div style={{width:'100%',paddingLeft:'0.5rem'}}>
-          <Link style={{color:'#fff',fontWeight:'700'}} to={`/${props.handle}`}>{props.fullName} <LightenedText>@{props.handle}</LightenedText></Link>
+          <Link style={{color:'#fff'}} to={`/${props.handle}`}><strong>{props.fullName}</strong> <LightenedText>@{props.handle}</LightenedText></Link>
           <YipTimeStamp>{props.timeStamp}</YipTimeStamp>
         
           <YipParagraph>{props.body}</YipParagraph>

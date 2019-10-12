@@ -1,8 +1,25 @@
 import React, { Component } from 'react';
+import ImageUploader from 'react-images-upload';
+
+import { FilePond, File, registerPlugin } from 'react-filepond';
+
+// Import FilePond styles
+import 'filepond/dist/filepond.min.css';
+
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+
+
+
 // import SearchHashTag from './SearchHashTag';
 // import SearchAt from './SearchAt';
 import styled from 'styled-components';
-import constants from '../../util/constants';
+import { constants, yipApi } from '../../util';
+import { Avatar } from '../styled';
+
+// Register the plugins
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 const ComposeContainer = styled.section`
   padding: 1rem 1rem 0.75rem;
@@ -11,13 +28,6 @@ const ComposeContainer = styled.section`
 const FlexContainer = styled.div`
   display: flex;
   position: relative;
-`;
-
-const Avatar = styled.img`
-  border-radius: 30px;
-  width: 40px;
-  height: 40px;
-  margin-right: 1rem;
 `;
 
 const TextAreaContainer = styled.div`
@@ -43,6 +53,10 @@ const TextArea = styled.div`
   top: 5px;
 `;
 
+const BodyImageContainer = styled.div`
+  display: flex;
+`;
+
 const IconButton = styled.button`
   background: transparent;
   border: none;
@@ -58,6 +72,20 @@ const IconButton = styled.button`
     background-color: rgba(0, 123, 255, 0.35);
   }
 `;
+
+const ImageUploaderStyles = {
+  background: 'transparent',
+  border: 'none',
+  fontSize: '1.75rem',
+  color: '#fff',
+  fontWeight: '300',
+  lineHeight: 1,
+  padding: '0.5rem 0.4rem',
+  margin: 0,
+  width: 40,
+  height: 40,
+  borderRadius: 30
+}
 
 const GifIcon = styled.span`
   color: #fff;
@@ -75,7 +103,8 @@ class ComposeYip extends Component {
     
     this.state = {
       yipBody: '',
-      user: props
+      bodyImages: [],
+      user: props,
     };
   }
 
@@ -85,22 +114,14 @@ class ComposeYip extends Component {
 
   postYip = async () => {
     const yip = {
-      body: this.state.yipBody,
-      yipBackCount: 0,
-      replyIds: []
+      body: this.state.yipBody
     };
 
-    const response = await fetch('/api/yip/', { 
-      method: 'POST', 
-      headers: {
-        'Authorization': `Token ${this.props.token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(yip)
-    });
+    const response = await yipApi.postYip(yip, this.props.token);
+    const result = await response.json();
 
-    console.log('compose yip response: ', response);
-    if (response.success) {
+    console.log('compose yip response: ', result);
+    if (result.success) {
       this.setState({yipBody: ''});
     }
   }
@@ -115,8 +136,12 @@ class ComposeYip extends Component {
     this.setState({yipBody: event.target.innerHTML});
   }
 
-  handleImage = event => {
-    console.log('handle image..');
+  handleImages = images => {
+    console.log('handle image..', images);
+    //this.state.bodyImages  <-- update this with image thumbnails
+    this.setState({
+      bodyImages: images.map(img => img.file)
+    });
   }
 
   handleGif = event => {
@@ -127,21 +152,57 @@ class ComposeYip extends Component {
     console.log('handle emoji..');
   }
 
+  handleInit = () => {
+    console.log('FilePond instance has initialised', this.pond);
+  }
+
   render() {
     return (
       <ComposeContainer>
         <FlexContainer style={{marginBottom:20}}>
-          <Avatar src={this.state.user.userImage ? this.state.user.userImage : constants.DEFAULT_USER_IMAGE} />
+          <Avatar style={{marginRight:'1rem'}} src={this.state.user.userImage ? this.state.user.userImage : constants.DEFAULT_USER_IMAGE} />
           <TextAreaContainer>
             <TextArea contentEditable onKeyUp={this.handleInputChange}></TextArea>
             <input type="hidden" name="yipBody" value={this.state.yipBody} />
             {!this.state.yipBody ? <Placeholder>What's Yappin?</Placeholder> : ''}
+            <BodyImageContainer>
+              <FilePond ref={ref => this.pond = ref}
+                files={this.state.bodyImages}
+                allowMultiple={true}
+                maxFiles={4}
+                server="/api"
+                allowDrop="false"
+                allowPaste="false"
+                instantUpload="false"
+                labelInvalidField="Select jpg or png images only"
+                labelFileLoading="Hmm loading"
+                labelIdle=""
+                oninit={() => this.handleInit() }
+                onupdatefiles={(fileItems) => this.handleImages(fileItems)} />
+              
+            </BodyImageContainer>
           </TextAreaContainer>
         </FlexContainer>
         
         <FlexContainer style={{justifyContent:'space-between'}}>
           <FlexContainer style={{alignItems:'center'}}>
-            <IconButton onClick={this.handleImage}><span className="far fa-image" style={{verticalAlign:'bottom'}}></span></IconButton>
+
+          
+        
+            {/* <ImageUploader 
+              fileContainerStyle={{height:0, margin:0, padding:0}} 
+              buttonStyles={ImageUploaderStyles} 
+              withLabel={false} 
+              withIcon={false} 
+              singleImage={false} 
+              buttonClassName="far fa-image compose-yip-image-upload"
+              buttonText='' 
+              name='bodyImages'
+              onChange={this.handleImages} 
+              imgExtension={['.jpg', '.png', '.jpeg']} 
+              maxFileSize={3000000} /> */}
+
+            <IconButton className="filepond--label-action"><span className="far fa-image" style={{verticalAlign:'bottom'}}></span></IconButton>
             <IconButton style={{display:'flex'}} onClick={this.handleGif}><GifIcon>GIF</GifIcon></IconButton>
             <IconButton onClick={this.handleEmoji} style={{fontSize:'1.5rem'}}><span className="far fa-smile" style={{verticalAlign:'bottom'}}></span></IconButton>
           </FlexContainer>

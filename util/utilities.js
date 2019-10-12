@@ -81,7 +81,7 @@ module.exports = {
         cb(null, {fieldName: file.fieldname});
       },
       key: function (req, file, cb) {
-        let fileName = req.payload.id + '/' + Date.now().toString();
+        let fileName = req.s3Path;
         if (file.mimetype === 'image/jpeg') {
           fileName += '.jpg';
         } else if (file.mimetype === 'image/png') {

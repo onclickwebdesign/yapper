@@ -11,6 +11,7 @@ html, body, #root, #yapper-wrapper, main {
 
 * {
   outline: none !important;
+  transition: 0.4s;
 }
 
 h1, h2, h3, h4, h5 {
@@ -92,6 +93,10 @@ header {
 #yapper-join-login a {
   display: block;
   margin: 15px 0;
+}
+
+.compose-yip-image-upload:hover {
+  background: rgba(0, 123, 255, 0.35) !important;
 }
 
 /* start: timeline styles */

@@ -31,16 +31,9 @@ class Profile extends Component {
   async componentDidMount() {
     if (!this.state.token) {
       console.log('not authorized to view this page...');
+      window.location.href = '/';
     } else {
       try {
-        // const response = await fetch('/api/user', { 
-        //   method: 'GET', 
-        //   headers: {
-        //     'Authorization': `Token ${this.state.token}`,
-        //     'Content-Type': 'application/json',
-        //   }
-        // });
-
         const response = await userApi.getUserWithSession(this.state.token);
   
         let json;
@@ -76,9 +69,9 @@ class Profile extends Component {
       const imageFile = image[image.length - 1];
       const fd = new FormData();
       fd.set('Content-Type', imageFile.type);
-      fd.set('profileImage', imageFile);
+      fd.set('user', imageFile);
 
-      const response = await fetch('/api/user/updateprofilepicture', { 
+      const response = await fetch('/api/user/updateprofilepicture/user', { 
         method: 'POST', 
         headers: {
           'Authorization': `Token ${this.state.token}`
@@ -99,9 +92,9 @@ class Profile extends Component {
       const imageFile = image[image.length - 1];
       const fd = new FormData();
       fd.set('Content-Type', imageFile.type);
-      fd.set('profileImage', imageFile);
+      fd.set('landscape', imageFile);
 
-      const response = await fetch('/api/user/updateprofilelandscape', { 
+      const response = await fetch('/api/user/updateprofilepicture/landscape', { 
         method: 'POST', 
         headers: {
           'Authorization': `Token ${this.state.token}`
