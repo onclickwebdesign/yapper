@@ -22,7 +22,7 @@ const GifsResults = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  height: calc(100% - 100px);
+  height: calc(100% - 85px);
   overflow-y: auto;
   overflow-x: hidden;
 `;
@@ -60,7 +60,7 @@ export default class SearchGifs extends Component {
           </SearchContainer>
           <GifsResults>
             {this.state.gifs.length && this.state.gifs.map((gif, i) => 
-              <img key={gif.id} style={{width:'24%', borderRadius:5, margin:'5px 0', border:'1px solid #fff'}} src={gif.images.fixed_height.url} alt="Giphy Gif" />)}
+              <img key={gif.id} style={{width:'24%', margin:'5px 0'}} src={gif.images.fixed_height.url} alt="Giphy Gif" />)}
           </GifsResults>
         </GifContainer>
       </BackgroundFade>
