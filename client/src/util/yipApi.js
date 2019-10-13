@@ -17,14 +17,11 @@ const YipAPI = {
       }
     });
   },
-  postYip: (yip, token) => {
-    return fetch('/api/yip/', { 
+  postYip: (yip, url, headers) => {
+    return fetch(url, { 
       method: 'POST', 
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(yip)
+      headers,
+      body: yip
     });
   }
 };

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Alert from '../Alert';
-import ImageUploader from 'react-images-upload';
 
 // import SearchHashTag from './SearchHashTag';
 // import SearchAt from './SearchAt';
@@ -84,20 +83,6 @@ const FileButton = styled.input`
   display: none;
 `;
 
-const ImageUploaderStyles = {
-  background: 'transparent',
-  border: 'none',
-  fontSize: '1.75rem',
-  color: '#fff',
-  fontWeight: '300',
-  lineHeight: 1,
-  padding: '0.5rem 0.4rem',
-  margin: 0,
-  width: 40,
-  height: 40,
-  borderRadius: 30
-}
-
 const GifIcon = styled.span`
   color: #fff;
   border: 2px solid #fff;
@@ -123,20 +108,31 @@ class ComposeYip extends Component {
     this.validTypes = ['jpg', 'image/jpg', 'jpeg', 'image/jpeg', 'png', 'image/png'];
   }
 
-  
-
   async componentDidMount() {
     
   }
 
   postYip = async () => {
-    const yip = {
-      body: this.state.yipBody
+    let yip, url;
+    const headers = {
+      'Authorization': `Token ${this.props.token}`,
     };
 
-    
+    if (!this.fileBuffer.length) { // no media attached
+      yip = JSON.stringify({ body: this.state.yipBody });
+      url = '/api/yip';
+      headers['Content-Type'] = 'application/json';
+    } else {
+      yip = new FormData();
+      for (let i = 0; i < this.fileBuffer.length; ++i) {
+        yip.append('images', this.fileBuffer[i]);
+      }
 
-    const response = await yipApi.postYip(yip, this.props.token);
+      yip.set('yipBody', this.state.yipBody);
+      url = `/api/yip/images/${this.fileBuffer.length}`;
+    }
+
+    const response = await yipApi.postYip(yip, this.props.token, url, headers);
     const result = await response.json();
 
     console.log('compose yip response: ', result);
@@ -157,7 +153,7 @@ class ComposeYip extends Component {
 
   handleImages = event => {
     const images = event.target.files;
-    console.log('handle image..', images);
+    
     Array.prototype.push.apply(this.fileBuffer, images);
     const errors = [];
     if (this.fileBuffer.length > 4) {
@@ -188,7 +184,6 @@ class ComposeYip extends Component {
     }
 
     imgProcessor.readMultipleImages(filesArray).then(results => this.setState({ bodyImages: results }));
-    
   }
 
   removeImage = name => {
@@ -228,19 +223,6 @@ class ComposeYip extends Component {
         
         <FlexContainer style={{justifyContent:'space-between'}}>
           <FlexContainer style={{alignItems:'center'}}>
-            {/* <ImageUploader 
-              fileContainerStyle={{height:0, margin:0, padding:0}} 
-              buttonStyles={ImageUploaderStyles} 
-              withLabel={false} 
-              withIcon={false} 
-              singleImage={false} 
-              buttonClassName="far fa-image compose-yip-image-upload"
-              buttonText='' 
-              name='bodyImages'
-              onChange={this.handleImages} 
-              imgExtension={['.jpg', '.png', '.jpeg']} 
-              maxFileSize={3000000} /> */}
-
             <LabelButton style={{margin:0}}>
               <span className="far fa-image" style={{verticalAlign:'bottom'}}></span>
               <FileButton id="yip-image-upload" onChange={this.handleImages} type="file" name="bodyImages" multiple />

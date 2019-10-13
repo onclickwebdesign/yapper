@@ -5,6 +5,8 @@ const { Schema } = mongoose;
 const YipSchema = new Schema({
   userId: Schema.Types.ObjectId,
   body: String,
+  images: [String],
+  gif: String,
   createdDate: { type: Date, default: Date.now },
   yipBackIds: [Schema.Types.ObjectId],
   replyIds: [Schema.Types.ObjectId],

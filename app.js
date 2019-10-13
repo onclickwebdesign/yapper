@@ -15,9 +15,10 @@ require('./models');
 
 require('./config/passport')(passport);
 
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
 // app.use(express.json());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(morgan('combined'));
 
