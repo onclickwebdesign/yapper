@@ -42,3 +42,39 @@ export const Avatar = styled.img`
   width: 50px;
   height: 50px;
 `;
+
+export const Thumbnail = styled.div`
+  position: relative;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+  margin-bottom: 15px;
+`;
+
+export const RemoveIcon = styled.span`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 1.75rem;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  background: rgba(0, 0, 0, 0.6);
+  font-weight: 300;
+  padding-bottom: 4px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  &:hover {
+    rgba(0, 0, 0, 0.9);
+  }
+`;
+
+export const YipImagesContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-height: 415px;
+`;

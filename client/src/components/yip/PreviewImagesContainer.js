@@ -1,13 +1,6 @@
 import React from 'react';
 import PreviewImage from './PreviewImage';
-import styled from 'styled-components';
-
-const ImagesContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  max-height: 415px;
-`;
+import { YipImagesContainer } from '../styled';
 
 const PreviewImagesContainer = props => {
   const getPreviewImages = images => {
@@ -41,9 +34,9 @@ const PreviewImagesContainer = props => {
   }
 
   return (
-    <ImagesContainer>
+    <YipImagesContainer>
       {props.images.length > 0 ? getPreviewImages(props.images).map(image => image) : ''}
-    </ImagesContainer>
+    </YipImagesContainer>
   );
 };
 

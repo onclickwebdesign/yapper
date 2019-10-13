@@ -1,6 +1,12 @@
 import React from 'react';
+import Modal from '../Modal';
 import Yip from '../yip/Yip';
 import { constants, userApi, yipApi } from '../../util';
+import styled from 'styled-components';
+
+const TimelineContainer = styled.section`
+  border-top: 1px solid #fff;
+`;
 
 class Timeline extends React.Component {
   constructor(props) {
@@ -10,7 +16,8 @@ class Timeline extends React.Component {
       yips: [],
       profileImage: session ? session.profileImage : constants.DEFAULT_USER_IMAGE,
       handle: session ? session.handle : '',
-      fullName: ''
+      fullName: '',
+      fullSizeMedia: ''
     };
   }
 
@@ -24,14 +31,27 @@ class Timeline extends React.Component {
     this.setState({fullName: user.fullName, yips: result.yips});
   }
 
+  showFullSizeMedia = url => {
+    this.setState({ fullSizeMedia: url });
+  }
+
+  closeFullSizeMedia = e => {
+    if (e.target.id !== 'modalContainer' && e.target.id !== 'modalBody' && e.target.id !== 'modalBodyImage') {
+      this.setState({ fullSizeMedia: '' });
+    }
+  }
+
   render() {
     return (
-      this.state.yips.map(yip => {
-        yip.profileImage = this.state.profileImage;
-        yip.handle = this.state.handle;
-        yip.fullName = this.state.fullName;
-        return <Yip {...yip} key={yip._id} />;
-      })
+      <TimelineContainer>
+        {this.state.yips.map(yip => {
+          yip.profileImage = this.state.profileImage;
+          yip.handle = this.state.handle;
+          yip.fullName = this.state.fullName;
+          return <Yip {...yip} showFullSizeMedia={this.showFullSizeMedia} key={yip._id} />;
+        })}
+        {this.state.fullSizeMedia ? <Modal body={<img id="modalBodyImage" src={this.state.fullSizeMedia} style={{width:'100%'}} alt="Yip Body Full Size" />} closeModal={this.closeFullSizeMedia} /> : ''}
+      </TimelineContainer>
     );
   }
 }

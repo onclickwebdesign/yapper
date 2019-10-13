@@ -132,7 +132,7 @@ class ComposeYip extends Component {
       url = `/api/yip/images/${this.fileBuffer.length}`;
     }
 
-    const response = await yipApi.postYip(yip, this.props.token, url, headers);
+    const response = await yipApi.postYip(yip, url, headers);
     const result = await response.json();
 
     console.log('compose yip response: ', result);
