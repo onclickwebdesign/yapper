@@ -1,25 +1,14 @@
 import React, { Component } from 'react';
+import Alert from '../Alert';
 import ImageUploader from 'react-images-upload';
-
-import { FilePond, File, registerPlugin } from 'react-filepond';
-
-// Import FilePond styles
-import 'filepond/dist/filepond.min.css';
-
-import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-
-
 
 // import SearchHashTag from './SearchHashTag';
 // import SearchAt from './SearchAt';
-import styled from 'styled-components';
-import { constants, yipApi } from '../../util';
-import { Avatar } from '../styled';
+import PreviewImagesContainer from './PreviewImagesContainer';
 
-// Register the plugins
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+import styled from 'styled-components';
+import { constants, yipApi, imgProcessor } from '../../util';
+import { Avatar } from '../styled';
 
 const ComposeContainer = styled.section`
   padding: 1rem 1rem 0.75rem;
@@ -73,6 +62,28 @@ const IconButton = styled.button`
   }
 `;
 
+const LabelButton = styled.label`
+  background: transparent;
+  border: none;
+  font-size: 1.75rem;
+  color: #fff;
+  font-weight: 300;
+  line-height: 1;
+  padding: 0.5rem 0.4rem;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  border-radius: 30px;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(0, 123, 255, 0.35);
+  }
+`;
+
+const FileButton = styled.input`
+  display: none;
+`;
+
 const ImageUploaderStyles = {
   background: 'transparent',
   border: 'none',
@@ -105,17 +116,25 @@ class ComposeYip extends Component {
       yipBody: '',
       bodyImages: [],
       user: props,
+      errors: []
     };
+
+    this.fileBuffer = [];
+    this.validTypes = ['jpg', 'image/jpg', 'jpeg', 'image/jpeg', 'png', 'image/png'];
   }
 
+  
+
   async componentDidMount() {
-    document.getElementById('image-icon-button').appendChild(document.getElementById('filepond-browse'));
+    
   }
 
   postYip = async () => {
     const yip = {
       body: this.state.yipBody
     };
+
+    
 
     const response = await yipApi.postYip(yip, this.props.token);
     const result = await response.json();
@@ -136,17 +155,52 @@ class ComposeYip extends Component {
     this.setState({yipBody: event.target.innerHTML});
   }
 
-  handleImages = images => {
+  handleImages = event => {
+    const images = event.target.files;
     console.log('handle image..', images);
-    //this.state.bodyImages  <-- update this with image thumbnails
-    this.setState({
-      bodyImages: images.map(img => img.file)
-    });
+    Array.prototype.push.apply(this.fileBuffer, images);
+    const errors = [];
+    if (this.fileBuffer.length > 4) {
+      this.fileBuffer.length = 4;
+      errors.push('Please select one gif, or up to four images total.');
+    }
+      
+    const filesArray = [];
+    
+    for (let i = 0; i < this.fileBuffer.length; ++i) {
+      const file = this.fileBuffer[i];
+      if (!file.type.match('image') || this.validTypes.indexOf(file.type) === -1) {
+        errors.push('Please select jpg or png images only.');
+        continue;
+      }
+
+      if (file.size > 3000000) {
+        errors.push('Please select images less than 3MB in size.');
+        continue;
+      }
+
+      filesArray.push(file);
+    }
+
+    if (!this.state.errors.length) {
+      this.setState({ errors });
+      setTimeout(() => this.setState({errors: []}), 5000);
+    }
+
+    imgProcessor.readMultipleImages(filesArray).then(results => this.setState({ bodyImages: results }));
+    
   }
-  
-  triggerBrowse = () => {
-    console.log('dispatching click');
-    document.getElementById('filepond-browse').click(); //.dispatchEvent('click');
+
+  removeImage = name => {
+    const tempBodyImages = this.state.bodyImages;
+
+    for (let i = 0; i < this.fileBuffer.length; ++i) {
+      if (this.fileBuffer[i].name === name) {
+        this.fileBuffer.splice(i, 1);
+        tempBodyImages.splice(i, 1);
+        this.setState({ bodyImages: tempBodyImages });
+      }
+    }
   }
 
   handleGif = event => {
@@ -157,45 +211,23 @@ class ComposeYip extends Component {
     console.log('handle emoji..');
   }
 
-  handleInit = () => {
-    console.log('FilePond instance has initialised', this.pond);
-    //document.getElementById('image-icon-button').appendChild(document.getElementById('filepond-browse'));
-  }
-
   render() {
     return (
       <ComposeContainer>
         <FlexContainer style={{marginBottom:20}}>
-          <Avatar style={{marginRight:'1rem'}} src={this.state.user.userImage ? this.state.user.userImage : constants.DEFAULT_USER_IMAGE} />
+          <Avatar style={{marginRight:'1rem'}} src={this.state.user.profileImage ? this.state.user.profileImage : constants.DEFAULT_USER_IMAGE} />
           <TextAreaContainer>
             <TextArea contentEditable onKeyUp={this.handleInputChange}></TextArea>
             <input type="hidden" name="yipBody" value={this.state.yipBody} />
             {!this.state.yipBody ? <Placeholder>What's Yappin?</Placeholder> : ''}
             <BodyImageContainer>
-              <FilePond ref={ref => this.pond = ref}
-                files={this.state.bodyImages}
-                allowMultiple={true}
-                maxFiles={4}
-                server="/api"
-                allowDrop="false"
-                allowPaste="false"
-                instantUpload="false"
-                labelInvalidField="Select jpg or png images only"
-                labelFileLoading="Hmm loading"
-                labelIdle='<span id="filepond-browse" class="filepond--label-action"></span>'
-                oninit={() => this.handleInit() }
-                onupdatefiles={(fileItems) => this.handleImages(fileItems)}>
-                </FilePond>
-              
+              <PreviewImagesContainer images={this.state.bodyImages} removeImage={this.removeImage} />
             </BodyImageContainer>
           </TextAreaContainer>
         </FlexContainer>
         
         <FlexContainer style={{justifyContent:'space-between'}}>
           <FlexContainer style={{alignItems:'center'}}>
-
-          
-        
             {/* <ImageUploader 
               fileContainerStyle={{height:0, margin:0, padding:0}} 
               buttonStyles={ImageUploaderStyles} 
@@ -209,15 +241,18 @@ class ComposeYip extends Component {
               imgExtension={['.jpg', '.png', '.jpeg']} 
               maxFileSize={3000000} /> */}
 
-            <IconButton id="image-icon-button" onClick={this.triggerBrowse}>
+            <LabelButton style={{margin:0}}>
               <span className="far fa-image" style={{verticalAlign:'bottom'}}></span>
-            </IconButton>
+              <FileButton id="yip-image-upload" onChange={this.handleImages} type="file" name="bodyImages" multiple />
+            </LabelButton>
+            
             <IconButton style={{display:'flex'}} onClick={this.handleGif}><GifIcon>GIF</GifIcon></IconButton>
             <IconButton onClick={this.handleEmoji} style={{fontSize:'1.5rem'}}><span className="far fa-smile" style={{verticalAlign:'bottom'}}></span></IconButton>
           </FlexContainer>
           <button style={{height:40}} onClick={this.postYip} className="yapper-btn-primary btn btn-primary">Yip</button>
         </FlexContainer>
         
+        {this.state.errors.map((error, i) => <Alert key={`yip-error-${i}`} type="danger" message={error} />)}
       </ComposeContainer>
     );
   }

@@ -15,6 +15,7 @@ class Home extends Component {
     this.state = {
       handle: session ? session.handle : '',
       email: session ? session.email : '',
+      profileImage: session ? session.profileImage : '',
       token: session ? session.token : false,
       id: session ? session._id: '',
     };
