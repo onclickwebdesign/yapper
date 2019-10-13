@@ -81,8 +81,9 @@ router.post('/:type/:count', verify.required, async (req, res) => {
 // GIF functionality
 router.get('/searchgifs', async (req, res) => {
   const query = req.query.search;
+  console.log('query: ', query);
   const gifs = await axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${process.env.GIPHY_API_KEY}&q=${query}&limit=25&offset=0&lang=en`);
-  
+  console.log(gifs.data);
   res.status(200).json({ gifs: gifs.data });
 });
 

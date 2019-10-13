@@ -15,7 +15,6 @@ const ModalContainer = styled.div`
   font-size: 1rem;
   z-index: 10;
   width: 80%;
-  
   background-color: rgb(30, 35, 38);
 `;
 

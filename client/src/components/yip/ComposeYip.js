@@ -5,6 +5,7 @@ import LoadingSpinner from '../LoadingSpinner';
 // import SearchHashTag from './SearchHashTag';
 // import SearchAt from './SearchAt';
 import PreviewImagesContainer from './PreviewImagesContainer';
+import SearchGifs from './SearchGifs';
 
 import styled from 'styled-components';
 import { constants, yipApi, imgProcessor } from '../../util';
@@ -101,6 +102,8 @@ class ComposeYip extends Component {
     this.state = {
       yipBody: '',
       bodyImages: [],
+      bodyGif: '',
+      searchGifs: false,
       user: props,
       loading: false,
       errors: []
@@ -214,8 +217,15 @@ class ComposeYip extends Component {
     console.log('handle gif..');
     if (this.state.bodyImages.length) {
       this.setState({ errors: ['Please select either one gif, or up to four images total.'] })
+    } else {
+      // search gifs UI..
+      // /api/yip/searchgifs?search=eric
+      this.setState({ searchGifs: true });
     }
   }
+
+  selectGif = gif => this.setState({ bodyGif: gif });
+  closeGifsSearch = () => this.setState({ searchGifs: false });
 
   handleEmoji = event => {
     console.log('handle emoji..');
@@ -249,6 +259,7 @@ class ComposeYip extends Component {
           <button style={{height:40}} onClick={this.postYip} className="yapper-btn-primary btn btn-primary">Yip</button>
         </FlexContainer>
         
+        {this.state.searchGifs && <SearchGifs selectGif={this.selectGif} closeGifsSearch={this.closeGifsSearch} />}
         {this.state.errors.map((error, i) => <Alert key={`yip-error-${i}`} type="danger" message={error} />)}
         {this.state.loading && <LoadingSpinner random={Math.floor(Math.random() * 8)} />}
       </ComposeContainer>
