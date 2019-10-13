@@ -1,16 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { RemoveIcon } from './styled';
-
-const ModalFade = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 9;
-`;
+import { RemoveIcon, BackgroundFade } from './styled';
 
 const ModalContainer = styled.div`
   position: absolute;
@@ -37,12 +27,12 @@ const ModalBody = styled.div`
 
 const Modal = props => {
   return (
-    <ModalFade onClick={props.closeModal}>
+    <BackgroundFade onClick={props.closeModal}>
       <ModalContainer id="modalContainer">
         <RemoveIcon onClick={props.closeModal}>&times;</RemoveIcon>
         <ModalBody id="modalBody">{props.body}</ModalBody>
       </ModalContainer>
-    </ModalFade>
+    </BackgroundFade>
   )
 };
 

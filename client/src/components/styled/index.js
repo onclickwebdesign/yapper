@@ -76,5 +76,14 @@ export const YipImagesContainer = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  max-height: 415px;
+`;
+
+export const BackgroundFade = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9;
 `;

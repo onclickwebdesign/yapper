@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const axios = require('axios');
 const mongoose = require('mongoose');
 const Yip = mongoose.model('Yip');
 const User = mongoose.model('User');
@@ -6,6 +7,7 @@ const verify = require('./verify');
 const multer  = require('multer');
 const upload = multer();
 const { s3upload, getDaysHoursFromNow } = require('../../util/utilities');
+require('dotenv').config();
 
 // get all yips from logged in user
 router.get('/', verify.required, async (req, res) => {
@@ -14,7 +16,7 @@ router.get('/', verify.required, async (req, res) => {
   // const user = await User.findById(id).populate('on');
 
   let err;
-  const yips = await Yip.find({userId: id}).catch(e => err = e);
+  const yips = await Yip.find({userId: id}).sort({createdDate: 'descending'}).catch(e => err = e);
   const dateStampedYips = yips.map(yip => {
     return { timeStamp: getDaysHoursFromNow(new Date(yip.createdDate)), ...yip._doc };
   });
@@ -33,8 +35,6 @@ router.post('/', verify.required, async (req, res) => {
     userId: id,
     ...req.body
   });
-
-  console.log('came into here....' , req.body);
 
   let err;
   const newYip = await yip.save().catch(e => err = e);
@@ -76,6 +76,14 @@ router.post('/:type/:count', verify.required, async (req, res) => {
   } else {
     res.status(200).json({ success: true, message: 'Yip posted successfully.', newYip });
   }
+});
+
+// GIF functionality
+router.get('/searchgifs', async (req, res) => {
+  const query = req.query.search;
+  const gifs = await axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${process.env.GIPHY_API_KEY}&q=${query}&limit=25&offset=0&lang=en`);
+  
+  res.status(200).json({ gifs: gifs.data });
 });
 
 module.exports = router;

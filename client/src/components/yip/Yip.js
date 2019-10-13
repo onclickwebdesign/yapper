@@ -51,28 +51,28 @@ const LiStyled = styled.li`
 const Yip = props => {
   const getYipImages = images => {
     if (images.length === 1) {
-      return [<YipImage key="yipBodyImage-0" url={images[0]} width={'100%'} height={415} showFullSizeMedia={props.showFullSizeMedia} />];
+      return [<YipImage key="yipBodyImage-0" url={images[0]} width={'100%'} height="auto" showFullSizeMedia={props.showFullSizeMedia} />];
     } else if(images.length === 2) {
       return images.map((image, i) => 
-        <YipImage key={`${i}-${image}`} url={image} width={'49%'} height={415} showFullSizeMedia={props.showFullSizeMedia} />)
+        <YipImage key={`${i}-${image}`} url={image} width={'49%'} height="auto" showFullSizeMedia={props.showFullSizeMedia} />)
     } else if (images.length === 3) {
       return (
-        [<YipImage key="yipBodyImage-0" url={images[0]} width={'49%'} height={415} showFullSizeMedia={props.showFullSizeMedia} />,
+        [<YipImage key="yipBodyImage-0" url={images[0]} width={'49%'} height="auto" showFullSizeMedia={props.showFullSizeMedia} />,
         <div key="yipBodyImage-1" style={{width:'49%'}}>
-          <YipImage key={`1-${images[1]}`} url={images[1]} width={'100%'} height={200} showFullSizeMedia={props.showFullSizeMedia} />
-          <YipImage key={`2-${images[2]}`} url={images[2]} width={'100%'} height={200} showFullSizeMedia={props.showFullSizeMedia} />
+          <YipImage key={`1-${images[1]}`} url={images[1]} width={'100%'} height="auto" showFullSizeMedia={props.showFullSizeMedia} />
+          <YipImage key={`2-${images[2]}`} url={images[2]} width={'100%'} height="auto" showFullSizeMedia={props.showFullSizeMedia} />
         </div>]
       );
     } else {
       return (
         [
           <div key="yipBodyImage-0" style={{width:'49%'}}>
-            <YipImage key={`0-${images[0]}`} url={images[0]} width={'100%'} height={200} showFullSizeMedia={props.showFullSizeMedia} />
-            <YipImage key={`1-${images[1]}`} url={images[1]} width={'100%'} height={200} showFullSizeMedia={props.showFullSizeMedia} />
+            <YipImage key={`0-${images[0]}`} url={images[0]} width={'100%'} height="49%" showFullSizeMedia={props.showFullSizeMedia} />
+            <YipImage key={`1-${images[1]}`} url={images[1]} width={'100%'} height="49%" showFullSizeMedia={props.showFullSizeMedia} />
           </div>,
           <div key="yipBodyImage-1" style={{width:'49%'}}>
-            <YipImage key={`2-${images[2]}`} url={images[2]} width={'100%'} height={200} showFullSizeMedia={props.showFullSizeMedia} />
-            <YipImage key={`3-${images[3]}`} url={images[3]} width={'100%'} height={200} showFullSizeMedia={props.showFullSizeMedia} />
+            <YipImage key={`2-${images[2]}`} url={images[2]} width={'100%'} height="49%" showFullSizeMedia={props.showFullSizeMedia} />
+            <YipImage key={`3-${images[3]}`} url={images[3]} width={'100%'} height="49%" showFullSizeMedia={props.showFullSizeMedia} />
           </div>
         ]
       );
@@ -82,7 +82,7 @@ const Yip = props => {
   return (
     <YipContainer>
       <YipBody>
-        <Link to={`/${props.handle}`} style={{width:50,borderRadius:30,overFlow:'hidden'}}>
+        <Link to={`/${props.handle}`} style={{width:50,height:50,borderRadius:30,overFlow:'hidden'}}>
           <Avatar src={props.profileImage} alt="Yapper User" />
         </Link>
       

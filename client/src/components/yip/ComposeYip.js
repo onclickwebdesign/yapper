@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Alert from '../Alert';
+import LoadingSpinner from '../LoadingSpinner';
 
 // import SearchHashTag from './SearchHashTag';
 // import SearchAt from './SearchAt';
@@ -101,6 +102,7 @@ class ComposeYip extends Component {
       yipBody: '',
       bodyImages: [],
       user: props,
+      loading: false,
       errors: []
     };
 
@@ -113,32 +115,42 @@ class ComposeYip extends Component {
   }
 
   postYip = async () => {
-    let yip, url;
-    const headers = {
-      'Authorization': `Token ${this.props.token}`,
-    };
-
-    if (!this.fileBuffer.length) { // no media attached
-      yip = JSON.stringify({ body: this.state.yipBody });
-      url = '/api/yip';
-      headers['Content-Type'] = 'application/json';
+    if (!this.state.yipBody) {
+      this.setState({ errors: ['Your yip is empty!'] });
+      setTimeout(() => this.setState({errors: []}), 5000);
     } else {
-      yip = new FormData();
-      for (let i = 0; i < this.fileBuffer.length; ++i) {
-        yip.append('images', this.fileBuffer[i]);
+      this.setState({ loading: true });
+      let yip, url;
+      const headers = {
+        'Authorization': `Token ${this.props.token}`,
+      };
+
+      if (!this.fileBuffer.length) { // no media attached
+        yip = JSON.stringify({ body: this.state.yipBody });
+        url = '/api/yip';
+        headers['Content-Type'] = 'application/json';
+      } else {
+        yip = new FormData();
+        for (let i = 0; i < this.fileBuffer.length; ++i) {
+          yip.append('images', this.fileBuffer[i]);
+        }
+
+        yip.set('yipBody', this.state.yipBody);
+        url = `/api/yip/images/${this.fileBuffer.length}`;
       }
 
-      yip.set('yipBody', this.state.yipBody);
-      url = `/api/yip/images/${this.fileBuffer.length}`;
+      const response = await yipApi.postYip(yip, url, headers);
+      const result = await response.json();
+
+      console.log('compose yip response: ', result);
+      if (result.success) {
+        document.getElementById('yip-text-area').innerHTML = '';
+        this.setState({ yipBody: '', bodyImages: [] });
+        this.fileBuffer = [];
+      }
     }
 
-    const response = await yipApi.postYip(yip, url, headers);
-    const result = await response.json();
-
-    console.log('compose yip response: ', result);
-    if (result.success) {
-      this.setState({yipBody: ''});
-    }
+    this.setState({ loading: false });
   }
 
   searchYipBody = () => {
@@ -200,6 +212,9 @@ class ComposeYip extends Component {
 
   handleGif = event => {
     console.log('handle gif..');
+    if (this.state.bodyImages.length) {
+      this.setState({ errors: ['Please select either one gif, or up to four images total.'] })
+    }
   }
 
   handleEmoji = event => {
@@ -212,7 +227,7 @@ class ComposeYip extends Component {
         <FlexContainer style={{marginBottom:20}}>
           <Avatar style={{marginRight:'1rem'}} src={this.state.user.profileImage ? this.state.user.profileImage : constants.DEFAULT_USER_IMAGE} />
           <TextAreaContainer>
-            <TextArea contentEditable onKeyUp={this.handleInputChange}></TextArea>
+            <TextArea id="yip-text-area" contentEditable onKeyUp={this.handleInputChange}></TextArea>
             <input type="hidden" name="yipBody" value={this.state.yipBody} />
             {!this.state.yipBody ? <Placeholder>What's Yappin?</Placeholder> : ''}
             <BodyImageContainer>
@@ -235,6 +250,7 @@ class ComposeYip extends Component {
         </FlexContainer>
         
         {this.state.errors.map((error, i) => <Alert key={`yip-error-${i}`} type="danger" message={error} />)}
+        {this.state.loading && <LoadingSpinner random={Math.floor(Math.random() * 8)} />}
       </ComposeContainer>
     );
   }
