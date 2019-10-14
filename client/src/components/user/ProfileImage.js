@@ -29,6 +29,7 @@ const Image = styled.img`
 const ProfileImage = props => {
   return (
     <ImageContainer>
+      {!props.noUpload && 
       <ImageUploader 
         fileContainerStyle={{background:'transparent', height:'35%', ...imageUploaderStyles}} 
         buttonStyles={{background: 'rgba(0, 0, 0, 0.6)', height:'100%', display:'flex', justifyContent:'space-around', ...imageUploaderStyles}} 
@@ -40,7 +41,7 @@ const ProfileImage = props => {
         name='profileImage'
         onChange={props.doProfileImageUpload} 
         imgExtension={['.jpg', '.png', '.jpeg']} 
-        maxFileSize={3000000} />
+        maxFileSize={3000000} />}
 
       <Image src={props.profileImage} alt="User Profile Image" />
     </ImageContainer>

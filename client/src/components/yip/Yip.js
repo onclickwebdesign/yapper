@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import YipImage from './YipImage';
+import YipBodyGif from './YipBodyGif';
 import { Link } from 'react-router-dom';
-import { LightenedText, Avatar, YipImagesContainer } from '../styled';
+import { LightenedText, Avatar, AvatarLink, YipImagesContainer } from '../styled';
+import { constants } from '../../util';
 
 const YipContainer = styled.div`
   padding: 1rem 1rem 0;
@@ -82,11 +84,11 @@ const Yip = props => {
   return (
     <YipContainer>
       <YipBody>
-        <Link to={`/${props.handle}`} style={{width:50,height:50,borderRadius:30,overFlow:'hidden'}}>
-          <Avatar src={props.profileImage} alt="Yapper User" />
-        </Link>
+        <AvatarLink to={`/${props.handle}`} style={{background:`url(${props.profileImage || constants.DEFAULT_USER_IMAGE}) center center no-repeat`}}>
+          <Avatar style={{display:'none'}} src={props.profileImage || constants.DEFAULT_USER_IMAGE} alt="Yapper User" />
+        </AvatarLink>
       
-        <div style={{width:'100%',paddingLeft:'0.5rem'}}>
+        <div style={{flexGrow:1}}>
           <Link style={{color:'#fff'}} to={`/${props.handle}`}><strong>{props.fullName}</strong> <LightenedText>@{props.handle}</LightenedText></Link>
           <YipTimeStamp>{props.timeStamp}</YipTimeStamp>
         
@@ -94,6 +96,7 @@ const Yip = props => {
           <YipImagesContainer>
             {props.images.length > 0 ? getYipImages(props.images).map(image => image) : ''}
           </YipImagesContainer>
+          {props.gif.url ? <YipBodyGif noRemove gif={props.gif} /> : ''}
         </div>
       </YipBody>
       <YipFooter className="no-margin">

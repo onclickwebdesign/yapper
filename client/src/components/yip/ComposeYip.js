@@ -6,10 +6,11 @@ import LoadingSpinner from '../LoadingSpinner';
 // import SearchAt from './SearchAt';
 import PreviewImagesContainer from './PreviewImagesContainer';
 import SearchGifs from './SearchGifs';
+import YipBodyGif from './YipBodyGif';
 
 import styled from 'styled-components';
 import { constants, yipApi, imgProcessor } from '../../util';
-import { Avatar } from '../styled';
+import { Avatar, AvatarLink } from '../styled';
 
 const ComposeContainer = styled.section`
   padding: 1rem 1rem 0.75rem;
@@ -22,7 +23,7 @@ const FlexContainer = styled.div`
 
 const TextAreaContainer = styled.div`
   background: transparent;
-  width: 90%;
+  flex-grow: 1;
   position: relative;
 `;
 
@@ -61,6 +62,10 @@ const IconButton = styled.button`
   &:hover {
     background-color: rgba(0, 123, 255, 0.35);
   }
+  &:disabled {
+    background: transparent;
+    opacity: 0.4;
+  }
 `;
 
 const LabelButton = styled.label`
@@ -78,6 +83,11 @@ const LabelButton = styled.label`
   cursor: pointer;
   &:hover {
     background-color: rgba(0, 123, 255, 0.35);
+  }
+  &.disabled {
+    background: transparent;
+    opacity: 0.4;
+    cursor: default;
   }
 `;
 
@@ -98,13 +108,15 @@ const GifIcon = styled.span`
 class ComposeYip extends Component {
   constructor(props) {
     super(props);
+
+    const session = JSON.parse(localStorage.getItem('usersession'));
     
     this.state = {
       yipBody: '',
       bodyImages: [],
       bodyGif: '',
       searchGifs: false,
-      user: props,
+      user: session,
       loading: false,
       errors: []
     };
@@ -125,11 +137,11 @@ class ComposeYip extends Component {
       this.setState({ loading: true });
       let yip, url;
       const headers = {
-        'Authorization': `Token ${this.props.token}`,
+        'Authorization': `Token ${this.state.user.token}`,
       };
 
       if (!this.fileBuffer.length) { // no media attached
-        yip = JSON.stringify({ body: this.state.yipBody });
+        yip = JSON.stringify({ body: this.state.yipBody, gif: this.state.bodyGif });
         url = '/api/yip';
         headers['Content-Type'] = 'application/json';
       } else {
@@ -148,7 +160,7 @@ class ComposeYip extends Component {
       console.log('compose yip response: ', result);
       if (result.success) {
         document.getElementById('yip-text-area').innerHTML = '';
-        this.setState({ yipBody: '', bodyImages: [] });
+        this.setState({ yipBody: '', bodyImages: [], bodyGif: '' });
         this.fileBuffer = [];
       }
     }
@@ -213,18 +225,16 @@ class ComposeYip extends Component {
     }
   }
 
-  handleGif = event => {
-    console.log('handle gif..');
+  handleGif = () => {
     if (this.state.bodyImages.length) {
       this.setState({ errors: ['Please select either one gif, or up to four images total.'] })
     } else {
-      // search gifs UI..
-      // /api/yip/searchgifs?search=eric
       this.setState({ searchGifs: true });
     }
   }
 
   selectGif = gif => this.setState({ bodyGif: gif });
+  removeBodyGif = () => this.setState({ bodyGif: '' });
   closeGifsSearch = () => this.setState({ searchGifs: false });
 
   handleEmoji = event => {
@@ -235,25 +245,30 @@ class ComposeYip extends Component {
     return (
       <ComposeContainer>
         <FlexContainer style={{marginBottom:20}}>
-          <Avatar style={{marginRight:'1rem'}} src={this.state.user.profileImage ? this.state.user.profileImage : constants.DEFAULT_USER_IMAGE} />
+          <AvatarLink to={`/${this.state.user.handle}`} style={{background:`url(${this.state.user.profileImage || constants.DEFAULT_USER_IMAGE}) center center no-repeat`}}>
+            <Avatar style={{display:'none'}} src={this.state.user.profileImage || constants.DEFAULT_USER_IMAGE} alt="Yapper User" />
+          </AvatarLink>
+
           <TextAreaContainer>
             <TextArea id="yip-text-area" contentEditable onKeyUp={this.handleInputChange}></TextArea>
             <input type="hidden" name="yipBody" value={this.state.yipBody} />
             {!this.state.yipBody ? <Placeholder>What's Yappin?</Placeholder> : ''}
             <BodyImageContainer>
-              <PreviewImagesContainer images={this.state.bodyImages} removeImage={this.removeImage} />
+              {this.state.bodyGif ? 
+                <YipBodyGif gif={this.state.bodyGif} removeBodyGif={this.removeBodyGif} /> : 
+                <PreviewImagesContainer images={this.state.bodyImages} removeImage={this.removeImage} />}
             </BodyImageContainer>
           </TextAreaContainer>
         </FlexContainer>
         
         <FlexContainer style={{justifyContent:'space-between'}}>
           <FlexContainer style={{alignItems:'center'}}>
-            <LabelButton style={{margin:0}}>
+            <LabelButton className={this.state.bodyGif ? 'disabled' : ''} style={{margin:0}}>
               <span className="far fa-image" style={{verticalAlign:'bottom'}}></span>
-              <FileButton id="yip-image-upload" onChange={this.handleImages} type="file" name="bodyImages" multiple />
+              <FileButton disabled={this.state.bodyGif ? true : false} id="yip-image-upload" onChange={this.handleImages} type="file" name="bodyImages" multiple />
             </LabelButton>
             
-            <IconButton style={{display:'flex'}} onClick={this.handleGif}><GifIcon>GIF</GifIcon></IconButton>
+            <IconButton disabled={this.state.bodyGif ? true : false} style={{display:'flex'}} onClick={this.handleGif}><GifIcon>GIF</GifIcon></IconButton>
             <IconButton onClick={this.handleEmoji} style={{fontSize:'1.5rem'}}><span className="far fa-smile" style={{verticalAlign:'bottom'}}></span></IconButton>
           </FlexContainer>
           <button style={{height:40}} onClick={this.postYip} className="yapper-btn-primary btn btn-primary">Yip</button>
@@ -261,7 +276,7 @@ class ComposeYip extends Component {
         
         {this.state.searchGifs && <SearchGifs selectGif={this.selectGif} closeGifsSearch={this.closeGifsSearch} />}
         {this.state.errors.map((error, i) => <Alert key={`yip-error-${i}`} type="danger" message={error} />)}
-        {this.state.loading && <LoadingSpinner random={Math.floor(Math.random() * 8)} />}
+        {this.state.loading && <LoadingSpinner />}
       </ComposeContainer>
     );
   }

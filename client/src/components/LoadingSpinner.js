@@ -53,10 +53,12 @@ const LoadingSpinner = props => {
     </Spinner>,
     <Spinner className="la-timer la-3x"><div></div></Spinner>,
     <Spinner className="fas fa-atom fa-spin" />
-  ]
+  ];
+  const random = Math.floor(Math.random() * spinners.length);
+
   return (
     <BackgroundFade>
-      {spinners[props.random]}
+      {spinners[random]}
     </BackgroundFade>
   );
 };

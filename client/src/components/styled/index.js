@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const MainSection = styled.main`
   display: flex;
@@ -35,6 +36,15 @@ export const MaterialInput = styled.input`
 
 export const LightenedText = styled.span`
   opacity: 0.35;
+`;
+
+export const AvatarLink = styled(Link)`
+  width: 50px;
+  height: 50px;
+  background-size: cover !important;
+  border-radius: 30px;
+  margin-right: 1rem;
+  flex-shrink: 0;
 `;
 
 export const Avatar = styled.img`

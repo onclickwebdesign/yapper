@@ -5,6 +5,40 @@ const Yip = mongoose.model('Yip');
 const verify = require('./verify');
 const { s3upload, getMonthName } = require('../../util/utilities');
 
+// get user by handle
+router.get('/:handle', async (req, res) => {
+  console.log(req.params.handle);
+  console.log(req.query.handle);
+  let err;
+  const user = await User.findOne({ handle: req.params.handle }).catch(e => err = e);
+  const yips = await Yip.find({ userId: user._id }).sort({createdDate: 'descending'}).catch(e => err = e);
+
+  if (err) {
+    console.error('Error: ', err);
+    res.status(500).json({ success: false, message: 'Error: ' + err });
+  }
+
+  if (!user) {
+    res.status(404).json({
+      msg: 'No user was found'
+    });
+  }
+
+  const { email, handle, fullName, profileImage, landscapeImage, locationCity, locationState, employer, occupation } = user;
+
+  const joinedDate = new Date(user.date);
+
+  res.status(200).json({
+    email, handle, fullName, profileImage, landscapeImage, locationCity, locationState, employer, occupation,
+    account: user.account,
+    yipCount: yips.length,
+    yips,
+    followerCount: user.followers.length,
+    followingCount: user.following.length,
+    dateJoined: `${getMonthName(joinedDate.getMonth())} ${joinedDate.getFullYear()}`
+  });
+});
+
 // get currently logged in user
 router.get('/', verify.required, async (req, res) => {
   const { payload: { id } } = req;
@@ -23,12 +57,12 @@ router.get('/', verify.required, async (req, res) => {
     });
   }
 
-  const { email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation } = user;
+  const { email, handle, fullName, profileImage, landscapeImage, locationCity, locationState, employer, occupation } = user;
 
   const joinedDate = new Date(user.date);
 
   res.status(200).json({
-    email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation,
+    email, handle, fullName, profileImage, landscapeImage, locationCity, locationState, employer, occupation,
     account: user.account,
     yipCount: yips.length,
     followerCount: user.followers.length,
@@ -38,7 +72,6 @@ router.get('/', verify.required, async (req, res) => {
 });
 
 router.post('/updateprofilepicture/:type', verify.required, async (req, res) => {
-  
   const singleUpload = s3upload.single(req.params.type);
   const { payload: { id } } = req;
   req.s3Path = `${id}/profile/${req.params.type}-${Date.now().toString()}`;

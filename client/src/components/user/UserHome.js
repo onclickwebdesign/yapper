@@ -1,9 +1,14 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import LeftNav from './LeftNav';
 import ComposeYip from '../yip/ComposeYip';
 import Timeline from './Timeline';
+import Explore from '../explore/Explore';
+import Notifications from '../notifications/Notifications';
+import Messages from '../messages/Messages';
+import Favorites from '../favorites/Favorites';
 import Profile from './Profile';
+import PublicProfile from './PublicProfile';
 import styled from 'styled-components';
 
 const HomeSection = styled.div`
@@ -28,8 +33,15 @@ const UserHome = props => {
         <MainSection>
           <div style={{width:'95%', border:'1px solid #fff'}}>
             <ComposeYip {...props} />
-            <Route exact path="/" component={() => <Timeline {...props} />} />
-            <Route exact path="/profile" component={Profile} />
+            <Switch>
+              <Route exact path="/" component={() => <Timeline {...props} />} />
+              <Route exact path="/explore" component={Explore} />
+              <Route exact path="/notifications" component={Notifications} />
+              <Route exact path="/messages" component={Messages} />
+              <Route exact path="/favorites" component={Favorites} />
+              <Route exact path="/profile" component={Profile} />
+              <Route exact path="/:handle" component={PublicProfile} />
+            </Switch>
           </div>
         </MainSection>
 

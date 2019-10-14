@@ -23,6 +23,12 @@ const YipAPI = {
       headers,
       body: yip
     });
+  },
+  getGifs: (url, headers) => {
+    return fetch(url, { 
+      method: 'GET', 
+      headers
+    });
   }
 };
 

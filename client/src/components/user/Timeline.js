@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from '../Modal';
 import Yip from '../yip/Yip';
+import LoadingSpinner from '../LoadingSpinner';
 import { constants, userApi, yipApi } from '../../util';
 import styled from 'styled-components';
 
@@ -17,18 +18,26 @@ class Timeline extends React.Component {
       profileImage: session ? session.profileImage : constants.DEFAULT_USER_IMAGE,
       handle: session ? session.handle : '',
       fullName: '',
-      fullSizeMedia: ''
+      fullSizeMedia: '',
+      loading: false
     };
   }
 
   async componentDidMount() {
-    const userPromise = await userApi.getUserWithSession(this.props.token);
-    const user = await userPromise.json();
-    const response = await yipApi.getAuthUserYips(this.props.token);
-    const result = await response.json();
-    console.log('yips: ', result);
+    try {
+      this.setState({ loading: true });
+      const userPromise = await userApi.getUserWithSession(this.props.token);
+      const user = await userPromise.json();
+      const response = await yipApi.getAuthUserYips(this.props.token);
+      const result = await response.json();
+      console.log('yips: ', result);
 
-    this.setState({fullName: user.fullName, yips: result.yips});
+      this.setState({ fullName: user.fullName, yips: result.yips });
+    } catch (e) {
+      console.error('Error: ', e);
+    } finally {
+      this.setState({ loading: false });
+    }
   }
 
   showFullSizeMedia = url => {
@@ -51,6 +60,7 @@ class Timeline extends React.Component {
           return <Yip {...yip} showFullSizeMedia={this.showFullSizeMedia} key={yip._id} />;
         })}
         {this.state.fullSizeMedia ? <Modal body={<img id="modalBodyImage" src={this.state.fullSizeMedia} style={{width:'100%'}} alt="Yip Body Full Size" />} closeModal={this.closeFullSizeMedia} /> : ''}
+        {this.state.loading && <LoadingSpinner />}
       </TimelineContainer>
     );
   }

@@ -6,7 +6,12 @@ const YipSchema = new Schema({
   userId: Schema.Types.ObjectId,
   body: String,
   images: [String],
-  gif: String,
+  gif: {
+    url: String,
+    height: String,
+    width: String,
+    id: String
+  },
   createdDate: { type: Date, default: Date.now },
   yipBackIds: [Schema.Types.ObjectId],
   replyIds: [Schema.Types.ObjectId],

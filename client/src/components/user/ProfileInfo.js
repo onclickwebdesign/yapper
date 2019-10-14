@@ -6,13 +6,13 @@ const ProfileInfoContainer = styled.div`
   position: relative;
   width: 50%;
   padding-left: 1rem;
-  padding-top: 3rem;
+  padding-top: 4.25rem;
 `;
 
 const PositionedImage = styled.div`
   position: absolute;
   top: -50%;
-  width: 150px;
+  width: 175px;
 `;
 
 const Flex = styled.div`
@@ -24,12 +24,17 @@ const FlexItem = styled.div`
   margin: 5px 10px 0 0;
 `;
 
-const white = {
-  color: '#fff'
-};
+const StyledLink = styled(Link)`
+  color: #fff;
+  &:hover {
+    text-decoration: underline;
+    color: #fff;
+  }
+`;
 
 const lightened = {
-  opacity: '0.35'
+  opacity: '0.35',
+  fontWeight: 300
 };
 
 const ProfileInfo = props => {
@@ -47,8 +52,8 @@ const ProfileInfo = props => {
         <FlexItem style={lightened}><span className="fa fa-calendar"></span> Joined {props.dateJoined}</FlexItem>
       </Flex>
       <Flex>
-        <FlexItem style={{marginRight:20}}><Link style={white} to={`/${props.handle}/following`}><strong>{props.followingCount}</strong> <span style={lightened}>Following</span></Link></FlexItem>
-        <FlexItem><Link style={white} to={`/${props.handle}/followers`}><strong>{props.followerCount}</strong> <span style={lightened}>Followers</span></Link></FlexItem>
+        <FlexItem style={{marginRight:20}}><StyledLink to={`/${props.handle}/following`}><strong>{props.followingCount}</strong> <span style={{fontWeight:'300'}}>Following</span></StyledLink></FlexItem>
+        <FlexItem><StyledLink to={`/${props.handle}/followers`}><strong>{props.followerCount}</strong> <span style={{fontWeight:'300'}}>Followers</span></StyledLink></FlexItem>
       </Flex>
     </ProfileInfoContainer>
   )

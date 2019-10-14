@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
+import LoadingSpinner from '../LoadingSpinner';
 import ProfileImage from './ProfileImage';
 import ProfileLandscape from './ProfileLandscape';
 import ProfileInfo from './ProfileInfo';
 import EditProfile from './EditProfile';
-import { constants, userApi } from '../../util';
+import { constants, userApi, fetchApi } from '../../util';
 
 class Profile extends Component {
   constructor(props) {
     super(props);
     const session = JSON.parse(localStorage.getItem('usersession'));
+
+    if (!session.token) {
+      alert('You need to be logged in to view this page.');
+      window.location.href = '/';
+    }
     
     this.state = {
       handle: session ? session.handle : '',
@@ -25,37 +31,35 @@ class Profile extends Component {
       employer: '',
       token: session ? session.token : '',
       id: session ? session._id: '',
+      loading: false
     };
   }
 
   async componentDidMount() {
-    if (!this.state.token) {
-      console.log('not authorized to view this page...');
-      window.location.href = '/';
-    } else {
-      try {
-        const response = await userApi.getUserWithSession(this.state.token);
-  
-        let json;
-  
-        if (response.status === 200) {
-          json = await response.json();
+    try {
+      this.setState({ loading: true });
+      const response = await userApi.getUserWithSession(this.state.token);
+      let json;
 
-          console.log('user; ', json);
-          const { email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined } = json;
-          this.setState({ email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined });
-        } else if (response.status === 404) {
-          // user not found in our system, so wipe browser session
-          localStorage.removeItem('usersession');
-          window.location.href = '/';
-        } else {
-          alert('Error retrieving user profile info. Please try again later.');
-          window.location.href = '/';
-          json = { msg: 'Error retrieving user profile info.' };
-        }
-      } catch (err) {
-        console.error('Something bad happened: ', err);
+      if (response.status === 200) {
+        json = await response.json();
+
+        console.log('user: ', json);
+        const { email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined } = json;
+        this.setState({ email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined });
+      } else if (response.status === 404) {
+        // user not found in our system, so wipe browser session
+        localStorage.removeItem('usersession');
+        window.location.href = '/';
+      } else {
+        alert('Error retrieving user profile info. Please try again later.');
+        window.location.href = '/';
+        json = { msg: 'Error retrieving user profile info.' };
       }
+    } catch (err) {
+      console.error('Something bad happened: ', err);
+    } finally {
+      this.setState({ loading: false });
     }
   }
 
@@ -66,65 +70,66 @@ class Profile extends Component {
 
   doProfileImageUpload = async image => {
     if (image.length > 0) {
+      this.setState({ loading: true });
       const imageFile = image[image.length - 1];
       const fd = new FormData();
       fd.set('Content-Type', imageFile.type);
       fd.set('user', imageFile);
 
-      const response = await fetch('/api/user/updateprofilepicture/user', { 
-        method: 'POST', 
-        headers: {
-          'Authorization': `Token ${this.state.token}`
-        },
-        body: fd
-      });
-      
-      const json = await response.json();
-      const session = JSON.parse(localStorage.getItem('usersession'));
-      session.profileImage = json.profileImage;
-      localStorage.setItem('usersession', JSON.stringify(session));
-      this.setState({ profileImage: json.profileImage });
+      try {
+        const response = await fetchApi.fetchPost('/api/user/updateprofilepicture/user', { 'Authorization': `Token ${this.state.token}` }, fd);
+        
+        const json = await response.json();
+        const session = JSON.parse(localStorage.getItem('usersession'));
+        session.profileImage = json.profileImage;
+        localStorage.setItem('usersession', JSON.stringify(session));
+        this.setState({ profileImage: json.profileImage });
+      } catch (e) {
+        console.error('Error: ', e);
+      } finally {
+        this.setState({ loading: false });
+      }
     }
   }
 
   doLandscapeImageUpload = async image => {
     if (image.length > 0) {
+      this.setState({ loading: true });
       const imageFile = image[image.length - 1];
       const fd = new FormData();
       fd.set('Content-Type', imageFile.type);
       fd.set('landscape', imageFile);
 
-      const response = await fetch('/api/user/updateprofilepicture/landscape', { 
-        method: 'POST', 
-        headers: {
-          'Authorization': `Token ${this.state.token}`
-        },
-        body: fd
-      });
+      try {
+        const response = await fetchApi.fetchPost('/api/user/updateprofilepicture/landscape', { 'Authorization': `Token ${this.state.token}` }, fd);
       
-      const json = await response.json();
-      this.setState({ landscapeImage: json.landscapeImage });
+        const json = await response.json();
+        this.setState({ landscapeImage: json.landscapeImage });
+      } catch (e) {
+        console.error('Error: ', e);
+      } finally {
+        this.setState({ loading: false });
+      }
     }
   }
 
   doProfileUpdate = async () => {
+    this.setState({ loading: true });
     const { fullName, email, occupation, employer, locationCity, locationState } = this.state;
-
+    const body = JSON.stringify({ fullName, email, occupation, employer, locationCity, locationState });
+    const headers = {
+      'Authorization': `Token ${this.state.token}`,
+      'Content-Type': 'application/json',
+    };
+    
     try {
-      const response = await fetch('/api/user/updateprofile', { 
-        method: 'POST', 
-        headers: {
-          'Authorization': `Token ${this.state.token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ fullName, email, occupation, employer, locationCity, locationState })
-      });
-      
+      const response = await fetchApi.fetchPost('/api/user/updateprofile', headers, body);
       const json = await response.json();
       console.log('update profile json: ', json);
-      
     } catch (err) {
       console.error('Something bad happened: ', err);
+    } finally {
+      this.setState({ loading: false });
     }
   }
 
@@ -145,6 +150,8 @@ class Profile extends Component {
             </Col>
           </Row>
         </Container>
+
+        {this.state.loading && <LoadingSpinner />}
       </div>
     );
   }
