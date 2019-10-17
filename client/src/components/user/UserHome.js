@@ -28,7 +28,7 @@ const UserHome = props => {
   return (
     <section style={{background:'#3C3C3B'}}>
       <HomeSection>
-        <LeftNav />
+        <LeftNav doSignOut={props.doSignOut} />
 
         <MainSection>
           <div style={{width:'95%', border:'1px solid #fff'}}>

@@ -31,7 +31,7 @@ const active = {
 
 const LeftNav = props => {
   return (
-    <nav style={{width:200, position:'fixed'}}>
+    <nav style={{width:200, position:'fixed', left:5}}>
       <ul>
         <li>
           <LeftNavLink style={{padding:'0 0.85rem', margin:'0.5rem 0 0 0.65rem', borderRadius:35}} to="/">
@@ -50,6 +50,11 @@ const LeftNav = props => {
         <li>
           <LeftNavLink activeStyle={active} to="/profile">
             <span style={faStyles} className="fa fa-user"></span> Profile
+          </LeftNavLink>
+        </li>
+        <li>
+          <LeftNavLink to="" onClick={props.doSignOut}>
+            <span className="fas fa-sign-out-alt"></span> Sign Out
           </LeftNavLink>
         </li>
       </ul>

@@ -21,11 +21,16 @@ class Home extends Component {
     };
   }
 
+  doSignOut = () => {
+    localStorage.removeItem('usersession');
+    window.location.href = '/';
+  }
+
   getMainRender = () => {
     const app = this.state.token ? (
       <BrowserRouter>
         <Switch>
-          <Route path="/" component={() => <UserHome {...this.state} />} />
+          <Route path="/" component={() => <UserHome {...this.state} doSignOut={this.doSignOut} />} />
           <Route component={NotFound} />
         </Switch>
       </BrowserRouter>

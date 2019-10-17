@@ -18,8 +18,13 @@ export const MaterialInput = styled.input`
   line-height: 1.5;  
   background: transparent !important;
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 2px solid #ccc;
   color: #ddd !important;
+  border-radius: 0;
+  &:focus {
+    box-shadow: none;
+    border-color: #007bff;
+  }
   &:-webkit-autofill,
   &:-webkit-autofill:hover,
   &:-webkit-autofill:focus,
@@ -96,4 +101,16 @@ export const BackgroundFade = styled.div`
   height: 100%;
   background: rgba(0, 0, 0, 0.6);
   z-index: 9;
+`;
+
+export const AuthForm = styled.form`
+  position: relative;
+  top: 4rem;
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0.5rem 2rem 2rem;
+  border-radius: 5px;
+  background: #333;
+  box-shadow: 0 2px 10px 0px #222;
 `;

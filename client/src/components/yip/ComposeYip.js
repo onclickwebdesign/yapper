@@ -175,7 +175,9 @@ class ComposeYip extends Component {
   }
 
   handleInputChange = event => {
-    this.setState({yipBody: event.target.innerHTML});
+    // console.log('HTML: ', event.target.innerHTML);
+    // console.log('Text: ', event.target.innerText);
+    this.setState({yipBody: event.target.innerText});
   }
 
   handleImages = event => {

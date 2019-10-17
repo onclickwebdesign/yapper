@@ -5,13 +5,19 @@ html, body, #root, #yapper-wrapper, main {
   padding: 0;
 }
 
-#root {
+#root, #yapper-wrapper {
   background: #3C3C3B;
 }
 
 * {
   outline: none !important;
   transition: 0.4s;
+}
+
+input:focus, 
+button:focus, 
+textarea:focus {
+  box-shadow: none;
 }
 
 h1, h2, h3, h4, h5 {
@@ -74,6 +80,12 @@ header {
   color: #fff;
 }
 
+.btn:focus, 
+.btn-primary:focus, 
+.yapper-btn-primary:focus {
+  box-shadow: none;
+}
+
 .yapper-btn-primary:disabled {
   background: transparent !important;
   border-color: #fff !important;
@@ -82,10 +94,6 @@ header {
 
 .yapper-btn-secondary {
   background: transparent;
-}
-
-#yapper-wrapper {
-  background: #3C3C3B;
 }
 
 #yapper-wrapper > section.no-auth {
