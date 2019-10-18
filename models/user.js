@@ -22,6 +22,9 @@ const UserSchema = new Schema({
   },
   following: [Schema.Types.ObjectId],
   followers: [Schema.Types.ObjectId],
+  followingCount: { type: Number, min: 0, default: 0 },
+  followerCount: { type: Number, min: 0, default: 0 },
+  yipCount: { type: Number, min: 0, default: 0 },
   account: {
     accountTypeId: { type: Number, default: 1 },
     isActive: { type: Boolean, default: false },

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Container404 = styled.section`
   background: url('/static/images/nospoon.jpg') center center no-repeat;
   background-size: cover;
-  padding: 2rem;
+  padding: 4rem 2rem;
   position: relative;
 `;
 

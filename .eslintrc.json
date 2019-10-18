@@ -22,7 +22,7 @@
     "no-func-assign": "error",
     "no-irregular-whitespace":"error",
     "no-unreachable": "error",
-    "curly": "error",
+    "brace-style": ["error", "1tbs"],
     "dot-notation": "error",
     "eqeqeq": "error",
     "no-empty-function": "error",

@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Yip = mongoose.model('Yip');
 const User = mongoose.model('User');
 const verify = require('./verify');
-const { s3upload, getDaysHoursFromNow } = require('../../util/utilities');
+const { s3upload, getDaysHoursFromNow, objectDateComparator } = require('../../util/utilities');
 require('dotenv').config();
 
 // get logged in user's timeline
@@ -20,11 +20,12 @@ router.get('/', verify.required, async (req, res) => {
 
   const yipsArray = await Promise.all(followingPromises);
 
-  // todo eric: still need to sort finalized array desc by date
   let dateStampedYips = [];
   yipsArray.forEach(yips => {
     dateStampedYips = [...dateStampedYips, ...yips.map(yip => ({ timeStamp: getDaysHoursFromNow(new Date(yip.createdDate)), ...yip._doc }))];
   });
+  
+  dateStampedYips.sort(objectDateComparator); // sort yips by most recent first
 
   res.status(200).json({ yips: dateStampedYips });
 });

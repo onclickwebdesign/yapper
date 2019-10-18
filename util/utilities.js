@@ -74,6 +74,13 @@ module.exports = {
         return 'Illegal argument. Must pass an integer between 0 - 11';
     }
   },
+  objectDateComparator: (a, b) => {
+    const date1 = new Date(a.createdDate);
+    const date2 = new Date(b.createdDate);
+    if (date1 < date2) return 1;
+    if (date1 > date2) return -1;
+    return 0;
+  },
   s3upload: multer({
     storage: multerS3({
       s3,

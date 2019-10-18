@@ -41,6 +41,7 @@ export const MaterialInput = styled.input`
 
 export const LightenedText = styled.span`
   opacity: 0.5;
+  font-weight: 300;
 `;
 
 export const AvatarLink = styled(Link)`
@@ -113,4 +114,22 @@ export const AuthForm = styled.form`
   border-radius: 5px;
   background: #333;
   box-shadow: 0 2px 10px 0px #222;
+`;
+
+// for usage on profile components
+export const StyledLink = styled(Link)`
+  color: #fff;
+  &:hover {
+    text-decoration: underline;
+    color: #fff;
+  }
+`;
+
+export const Flex = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+export const FlexItem = styled.div`
+  margin: 5px 10px 0 0;
 `;

@@ -56,6 +56,8 @@ class Login extends Component {
         <div className="form-group">
           <button style={{marginTop:'1rem'}} className="btn btn-primary yapper-btn-primary" type="button" onClick={this.doLogin}>Log In!</button>
         </div>
+
+        <small style={{position:'absolute',right:'2rem',bottom:'3rem'}}>Don't have an account? <Link to="/register">Sign up</Link>.</small>
       </AuthForm>
     );
   }
