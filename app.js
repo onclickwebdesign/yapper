@@ -47,7 +47,7 @@ mongoose.connect(mongoURI || 'mongodb://localhost/yapper', { useNewUrlParser: tr
   () => console.log(`MongoDB connected for ${process.env.NODE_ENV}.`)
 ).catch(err => console.error(err));
 
-mongoose.set('debug', true);
+// mongoose.set('debug', true);
 
 // setup routes
 app.use(require('./routes'));

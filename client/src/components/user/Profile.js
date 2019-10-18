@@ -39,14 +39,13 @@ class Profile extends Component {
     try {
       this.setState({ loading: true });
       const response = await userApi.getUserWithSession(this.state.token);
-      let json;
+      let user;
 
       if (response.status === 200) {
-        json = await response.json();
+        user = await response.json();
 
-        console.log('user: ', json);
-        const { email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined } = json;
-        this.setState({ email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined });
+        const { email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined, followerCount, followingCount } = user;
+        this.setState({ email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined, followerCount, followingCount });
       } else if (response.status === 404) {
         // user not found in our system, so wipe browser session
         localStorage.removeItem('usersession');
@@ -54,7 +53,7 @@ class Profile extends Component {
       } else {
         alert('Error retrieving user profile info. Please try again later.');
         window.location.href = '/';
-        json = { msg: 'Error retrieving user profile info.' };
+        user = { msg: 'Error retrieving user profile info.' };
       }
     } catch (err) {
       console.error('Something bad happened: ', err);

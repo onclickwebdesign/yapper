@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import AuthNotFound from '../AuthNotFound';
 import LeftNav from './LeftNav';
 import ComposeYip from '../yip/ComposeYip';
 import Timeline from './Timeline';
@@ -41,6 +42,7 @@ const UserHome = props => {
               <Route exact path="/favorites" component={Favorites} />
               <Route exact path="/profile" component={Profile} />
               <Route exact path="/:handle" component={PublicProfile} />
+              <Route component={AuthNotFound} />
             </Switch>
           </div>
         </MainSection>

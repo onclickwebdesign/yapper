@@ -40,7 +40,7 @@ export const MaterialInput = styled.input`
 `;
 
 export const LightenedText = styled.span`
-  opacity: 0.35;
+  opacity: 0.5;
 `;
 
 export const AvatarLink = styled(Link)`

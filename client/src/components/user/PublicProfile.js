@@ -3,7 +3,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import ProfileImage from './ProfileImage';
 import ProfileLandscape from './ProfileLandscape';
 import ProfileInfo from './ProfileInfo';
-import NotFound from '../NotFound';
+import AuthNotFound from '../AuthNotFound';
 import { constants, fetchApi } from '../../util';
 
 export default class PublicProfile extends Component {
@@ -13,17 +13,18 @@ export default class PublicProfile extends Component {
     
     this.state = {
       session,
-      handle: '',
-      email: '',
-      profileImage: '',
-      landscapeImage: '',
-      followerCount: 0,
-      followingCount: 0,
-      dateJoined: '',
-      locationCity: '',
-      locationState: '',
-      occupation: '',
-      employer: '',
+      user: {},
+      // handle: '',
+      // email: '',
+      // profileImage: '',
+      // landscapeImage: '',
+      // followerCount: 0,
+      // followingCount: 0,
+      // dateJoined: '',
+      // locationCity: '',
+      // locationState: '',
+      // occupation: '',
+      // employer: '',
       loading: false
     };
   }
@@ -32,15 +33,18 @@ export default class PublicProfile extends Component {
     console.log('componentDidMount: ', this.props.match.params.handle);
     try {
       this.setState({ loading: true });
-      const response = await fetchApi.fetchGet(`/api/user/${this.props.match.params.handle}`, { 'Content-Type': 'application/json' });
-      let json;
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${this.state.session.token}`
+      };
+      const response = await fetchApi.fetchGet(`/api/user/${this.props.match.params.handle}`, headers);
+      let user;
 
       if (response.status === 200) {
-        json = await response.json();
+        user = await response.json();
 
-        console.log('user: ', json);
-        const { email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined } = json;
-        this.setState({ email, handle, fullName, yipCount, profileImage, landscapeImage, locationCity, locationState, employer, occupation, dateJoined });
+        console.log('user: ', user);
+        this.setState({ user });
       } else if (response.status === 404) {
         // user not found in our system, show 404 page
         this.setState({ userNotFound: true });
@@ -55,25 +59,31 @@ export default class PublicProfile extends Component {
     }
   }
 
+  doFollow = async isUnfollow => {
+    this.setState({ loading: true });
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.state.session.token}`
+    };
+    const response = await fetchApi.fetchPost(`/api/user/${isUnfollow ? 'un' : ''}follow/${this.state.user.handle}`, headers, null);
+    const json = await response.json();
+    const newUserState = this.state.user;
+    newUserState.followerCount = json.followerCount;
+    newUserState.isFollowing = !isUnfollow;
+    this.setState({ loading: false, user: newUserState });
+  }
+
   render() {
     return (
-      this.state.userNotFound ? <NotFound /> : 
+      this.state.userNotFound ? <AuthNotFound /> : 
         (
         <div>
           <section style={{paddingBottom:'1rem'}}>
-            <ProfileLandscape landscapeImage={this.state.landscapeImage} />
-            <ProfileInfo {...this.state}>
-              <ProfileImage noUpload profileImage={this.state.profileImage || constants.DEFAULT_USER_IMAGE} />
+            <ProfileLandscape landscapeImage={this.state.user.landscapeImage} />
+            <ProfileInfo {...this.state.user} doFollow={this.doFollow} token={this.state.session.token} publicProfile>
+              <ProfileImage noUpload profileImage={this.state.user.profileImage || constants.DEFAULT_USER_IMAGE} />
             </ProfileInfo>
           </section>
-        
-          {/* <Container style={{borderTop:'1px solid #fff', marginTop:'1rem', paddingTop:'2rem'}}>
-            <Row>
-              <Col sm={12}>
-                <EditProfile updateInput={this.updateInput} doProfileUpdate={this.doProfileUpdate} {...this.state} />
-              </Col>
-            </Row>
-          </Container> */}
 
           {this.state.loading && <LoadingSpinner />}
         </div>

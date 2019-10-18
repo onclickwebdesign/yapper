@@ -17,7 +17,9 @@
     "heroku-postbuild": "npm run build"
   },
   "jest": {
-    "modulePathIgnorePatterns": ["client"]
+    "modulePathIgnorePatterns": [
+      "client"
+    ]
   },
   "repository": {
     "type": "git",

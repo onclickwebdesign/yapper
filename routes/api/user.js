@@ -6,10 +6,17 @@ const verify = require('./verify');
 const { s3upload, getMonthName } = require('../../util/utilities');
 
 // get user by handle
-router.get('/:handle', async (req, res) => {
-  
+router.get('/:handle', verify.optional, async (req, res) => {
+  const id = req.payload ? req.payload.id : null;
+
   let err;
   const user = await User.findOne({ handle: req.params.handle }).catch(e => err = e);
+  if (!user) {
+    res.status(404).json({ success: false, message: 'A user with that handle was not found.' });
+  }
+
+  const authUser = id ? await User.findById(id) : null;
+
   const yips = await Yip.find({ userId: user._id }).sort({createdDate: 'descending'}).catch(e => err = e);
 
   if (err) {
@@ -19,7 +26,7 @@ router.get('/:handle', async (req, res) => {
 
   if (!user) {
     res.status(404).json({
-      msg: 'No user was found'
+      msg: 'No user was found with that handle.'
     });
   }
 
@@ -34,7 +41,8 @@ router.get('/:handle', async (req, res) => {
     yips,
     followerCount: user.followers.length,
     followingCount: user.following.length,
-    dateJoined: `${getMonthName(joinedDate.getMonth())} ${joinedDate.getFullYear()}`
+    dateJoined: `${getMonthName(joinedDate.getMonth())} ${joinedDate.getFullYear()}`,
+    isFollowing: id ? authUser.following.indexOf(user._id) > -1 : null
   });
 });
 
@@ -68,6 +76,32 @@ router.get('/', verify.required, async (req, res) => {
     followingCount: user.following.length,
     dateJoined: `${getMonthName(joinedDate.getMonth())} ${joinedDate.getFullYear()}`
   });
+});
+
+// follow a user
+router.post('/follow/:handle', verify.required, async (req, res) => {
+  const { payload: { id } } = req;
+  const followee = await User.findOneAndUpdate({ handle: req.params.handle }, { $push: { followers: id } }, { new: true });
+  if (!followee) {
+    res.status(404).json({ message: 'Could not follow, the user was not found.' });
+  }
+
+  User.findByIdAndUpdate(id, { $push: { following: followee._id } }, { new: true }).then(() => 
+    res.status(201).json({ success: true, message: 'User followed successfully.', followerCount: followee.followers.length })
+  ).catch(e => res.status(500).json({ success: false, message: 'Error following user.', error: e }));
+});
+
+// unfollow a user
+router.post('/unfollow/:handle', verify.required, async (req, res) => {
+  const { payload: { id } } = req;
+  const followee = await User.findOneAndUpdate({ handle: req.params.handle }, { $pullAll: { followers: [id] } }, { new: true });
+  if (!followee) {
+    res.status(404).json({ message: 'Could not follow, the user was not found.' });
+  }
+
+  User.findByIdAndUpdate(id, { $pullAll: { following: [followee._id] } }, { new: true }).then(() => 
+    res.status(201).json({ success: true, message: 'User has been unfollowed successfully.', followerCount: followee.followers.length })
+  ).catch(e => res.status(500).json({ success: false, message: 'Error following user.', error: e }));
 });
 
 router.post('/updateprofilepicture/:type', verify.required, async (req, res) => {
