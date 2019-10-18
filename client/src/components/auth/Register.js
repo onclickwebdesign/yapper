@@ -30,7 +30,7 @@ class Register extends Component {
     try {
       const response = await AuthAPI.doRegister(fullName, handle, email, password);
       let json;
-      if (response.status === 200) {
+      if (response.status === 201) {
         json = await response.json();
         localStorage.setItem('usersession', JSON.stringify(json));
         console.log('json: ', json);
@@ -67,6 +67,8 @@ class Register extends Component {
         <div className="form-group">
           <button style={{marginTop:'1rem'}} className="btn btn-primary yapper-btn-primary" type="button" onClick={this.doRegister}>Join</button>
         </div>
+
+        <small style={{position:'absolute',right:'2rem',bottom:'3rem'}}>Already have an account? <Link to="/login">Sign in</Link>.</small>
       </AuthForm>
     );
   }

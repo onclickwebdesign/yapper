@@ -100,11 +100,17 @@ router.post('/:type/:count', verify.required, async (req, res) => {
 });
 
 // GIF functionality
-router.get('/searchgifs', async (req, res) => {
+router.get('/gif/searchgifs', async (req, res) => {
   const query = req.query.search;
-  const gifs = await axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${process.env.GIPHY_API_KEY}&q=${query}&limit=25&offset=0&lang=en`);
-  
-  res.status(200).json({ gifs: gifs.data });
+  const limit = req.query.limit;
+  try {
+    const gifs = await axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${process.env.GIPHY_API_KEY}&q=${query}&limit=${limit}&offset=0&lang=en`);
+    // const gifs = result.data;
+    res.status(200).json(gifs.data);
+  } catch (e) {
+    res.status(500).json({ success: false, message: 'Error retrieving gifs.', error: e });
+  }
+
 });
 
 module.exports = router;

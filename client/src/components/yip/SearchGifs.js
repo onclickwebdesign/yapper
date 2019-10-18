@@ -60,12 +60,11 @@ export default class SearchGifs extends Component {
   }
 
   searchGifs = async () => {
-    let url = '/api/yip/searchgifs';
-    if (this.state.query) url += `?search=${this.state.query}`;
+    let url = '/api/yip/gif/searchgifs?limit=25';
+    if (this.state.query) url += `&search=${this.state.query}`;
     const result = await yipApi.getGifs(url, { 'Content-Type': 'application/json' });
     const gifs = await result.json();
-    console.log('gifs: ', gifs.gifs.data);
-    this.setState({ gifs: gifs.gifs.data });
+    this.setState({ gifs: gifs.data });
   }
 
   handleInput = e => {
