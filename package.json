@@ -2,16 +2,22 @@
   "name": "yapper",
   "version": "1.0.0",
   "description": "A social media application similar to twitter.",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start": "if-env NODE_ENV=production && npm run start:prod || concurrently \"npm run start:dev\" \"jest --watch\"",
     "start:prod": "node server.js",
     "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
     "client": "cd client && npm run start",
-    "seed": "node scripts/seedDB.js",
+    "lint": "eslint --quiet .",
+    "fix": "eslint --fix .",
+    "test": "npm run lint && cross-env NODE_ENV=test jest",
+    "test:integration": "cross-env NODE_ENV=test jest -c jest.integration.config.js",
     "install": "cd client && npm install",
     "build": "cd client && npm run build",
     "heroku-postbuild": "npm run build"
+  },
+  "jest": {
+    "modulePathIgnorePatterns": ["client"]
   },
   "repository": {
     "type": "git",
@@ -45,6 +51,10 @@
   },
   "devDependencies": {
     "concurrently": "^5.0.0",
-    "dotenv": "^8.1.0"
+    "cross-env": "^6.0.3",
+    "dotenv": "^8.1.0",
+    "eslint": "^5.16.0",
+    "jest": "^24.7.1",
+    "supertest": "^4.0.2"
   }
 }

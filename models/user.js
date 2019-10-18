@@ -62,11 +62,11 @@ UserSchema.methods.generateJWT = function() {
     id: this._id,
     exp: parseInt(expirationDate.getTime() / 1000, 10),
   }, 'secret');
-}
+};
 
 UserSchema.methods.toAuthJSON = function() {
   return {
-    _id: this._id,
+    // _id: this._id,
     email: this.email,
     handle: this.handle,
     token: this.generateJWT(),

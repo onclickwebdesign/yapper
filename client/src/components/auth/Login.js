@@ -28,7 +28,7 @@ class Login extends Component {
       const response = await AuthAPI.doLogin(email, password);
       let json;
 
-      if (response.status === 403) {
+      if (response.status === 401) {
         json = { msg: 'Email or password is incorrect.' };
       } else {
         json = await response.json();

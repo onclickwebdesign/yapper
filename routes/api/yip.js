@@ -2,10 +2,8 @@ const router = require('express').Router();
 const axios = require('axios');
 const mongoose = require('mongoose');
 const Yip = mongoose.model('Yip');
-const User = mongoose.model('User');
+// const User = mongoose.model('User');
 const verify = require('./verify');
-const multer  = require('multer');
-const upload = multer();
 const { s3upload, getDaysHoursFromNow } = require('../../util/utilities');
 require('dotenv').config();
 
@@ -32,7 +30,7 @@ router.get('/', verify.required, async (req, res) => {
 router.post('/', verify.required, async (req, res) => {
   const { payload: { id } } = req;
   const { body, gif } = req.body;
-  console.log('gif is: ', gif);
+  
   const yip = new Yip({
     userId: id,
     body,

@@ -22,15 +22,14 @@ String.prototype.hash53 = function (seed = 0) {
 };
 
 module.exports = {
-  fetchGet: (url, data) => {
-    return new Promise((resolve, reject) => {
-      resolve();
-    });
-  },
   getDaysHoursFromNow: date => {
+    if (Object.prototype.toString.call(date) !== '[object Date]') {
+      return 'Illegal argument. Must be a date object.';
+    }
+
     const now = Date.now();
     let timeString = '';
-    // const date = new Date(yip.createdDate);
+    
     let delta = (now - date) / 1000;
     const days = Math.floor(delta / 86400);
     timeString += days > 0 ? `${days}d ` : '';
@@ -49,40 +48,30 @@ module.exports = {
     switch (monthNum) {
       case 0:
         return 'January';
-        break;
       case 1:
         return 'February';
-        break;
       case 2:
         return 'March';
-        break;
       case 3:
         return 'April';
-        break;
       case 4:
         return 'May';
-        break;
       case 5:
         return 'June';
-        break;
       case 6:
         return 'July';
-        break;
       case 7:
         return 'August';
-        break;
       case 8:
         return 'September';
-        break;
       case 9:
         return 'October';
-        break;
       case 10:
         return 'November';
-        break;
       case 11:
         return 'December';
-        break;
+      default:
+        return 'Illegal argument. Must pass an integer between 0 - 11';
     }
   },
   s3upload: multer({
@@ -94,9 +83,6 @@ module.exports = {
         cb(null, {fieldName: file.fieldname});
       },
       key: function (req, file, cb) {
-        console.log('==== in key callback ====');
-        console.log(req.body);
-        console.log('==== in key callback ====');
         let fileName = req.s3Path + file.originalname.hash53();
         if (file.mimetype === 'image/jpeg') {
           fileName += '.jpg';

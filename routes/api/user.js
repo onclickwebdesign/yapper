@@ -7,8 +7,7 @@ const { s3upload, getMonthName } = require('../../util/utilities');
 
 // get user by handle
 router.get('/:handle', async (req, res) => {
-  console.log(req.params.handle);
-  console.log(req.query.handle);
+  
   let err;
   const user = await User.findOne({ handle: req.params.handle }).catch(e => err = e);
   const yips = await Yip.find({ userId: user._id }).sort({createdDate: 'descending'}).catch(e => err = e);
@@ -75,8 +74,6 @@ router.post('/updateprofilepicture/:type', verify.required, async (req, res) => 
   const singleUpload = s3upload.single(req.params.type);
   const { payload: { id } } = req;
   req.s3Path = `${id}/profile/${req.params.type}-${Date.now().toString()}`;
-
-  console.log(JSON.stringify(req.s3Path));
   
   singleUpload(req, res, async err => {
     if (err) {
@@ -85,8 +82,9 @@ router.post('/updateprofilepicture/:type', verify.required, async (req, res) => 
 
     const profileImage = req.file ? req.file.location : 'Location_not_defined';
 
-    const user = await User.findByIdAndUpdate(id, { profileImage }, { new: true }).catch(e => err = e);
-    res.status(200).json({ success: true, message: 'Image uploaded successfully.', profileImage });
+    User.findByIdAndUpdate(id, { profileImage }, { new: true }).then(() => 
+      res.status(200).json({ success: true, message: 'Image uploaded successfully.', profileImage })
+    ).catch(e => res.status(500).json({ success: false, message: 'Error setting user\'s profile picture in database.', error: e }));
   });
 });
 
