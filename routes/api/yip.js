@@ -2,27 +2,47 @@ const router = require('express').Router();
 const axios = require('axios');
 const mongoose = require('mongoose');
 const Yip = mongoose.model('Yip');
-// const User = mongoose.model('User');
+const User = mongoose.model('User');
 const verify = require('./verify');
 const { s3upload, getDaysHoursFromNow } = require('../../util/utilities');
 require('dotenv').config();
 
-// get all yips from logged in user
+// get logged in user's timeline
 router.get('/', verify.required, async (req, res) => {
   const { payload: { id } } = req;
-  // const user = await User.findById(id).populate('yips').populate('yipBacks').populate('replys').catch(e => console.log('Error: ', e));
-  // const user = await User.findById(id).populate('on');
 
-  let err;
-  const yips = await Yip.find({userId: id}).sort({createdDate: 'descending'}).catch(e => err = e);
-  const dateStampedYips = yips.map(yip => {
-    return { timeStamp: getDaysHoursFromNow(new Date(yip.createdDate)), ...yip._doc };
+  // let err;
+  const user = await User.findById(id);
+  const followingPromises = [];
+  user.following.forEach(id => {
+    followingPromises.push(Yip.find({ userId: id }).sort({ createdDate: 'descending' }).populate('userId', 'handle fullName profileImage -_id'));
   });
 
-  if (err) {
-    res.status(200).json({ success: false, message: 'Error retrieving Yips.' });
+  const yipsArray = await Promise.all(followingPromises);
+
+  // todo eric: still need to sort finalized array desc by date
+  let dateStampedYips = [];
+  yipsArray.forEach(yips => {
+    dateStampedYips = [...dateStampedYips, ...yips.map(yip => ({ timeStamp: getDaysHoursFromNow(new Date(yip.createdDate)), ...yip._doc }))];
+  });
+
+  res.status(200).json({ yips: dateStampedYips });
+});
+
+// get all yips from a specific user
+router.get('/:handle', async (req, res) => {
+  let err;
+  const user = await User.findOne({ handle: req.params.handle }).catch(e => err = e);
+  if (!user) {
+    res.status(404).json({ success: false, message: 'No user was found with that handle.' });
   }
 
+  const yips = await Yip.find({userId: user._id}).sort({createdDate: 'descending'}).catch(e => err = e);
+  if (err) {
+    res.status(500).json({ success: false, message: 'Error retrieving Yips.' });
+  }
+
+  const dateStampedYips = yips.map(yip => ({ timeStamp: getDaysHoursFromNow(new Date(yip.createdDate)), ...yip._doc }));
   res.status(200).json({ yips: dateStampedYips });
 });
 

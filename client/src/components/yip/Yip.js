@@ -84,12 +84,12 @@ const Yip = props => {
   return (
     <YipContainer>
       <YipBody>
-        <AvatarLink to={`/${props.handle}`} style={{background:`url(${props.profileImage || constants.DEFAULT_USER_IMAGE}) center center no-repeat`}}>
-          <Avatar style={{display:'none'}} src={props.profileImage || constants.DEFAULT_USER_IMAGE} alt="Yapper User" />
+        <AvatarLink to={`/${props.userId.handle}`} style={{background:`url(${props.userId.profileImage || constants.DEFAULT_USER_IMAGE}) center center no-repeat`}}>
+          <Avatar style={{display:'none'}} src={props.userId.profileImage || constants.DEFAULT_USER_IMAGE} alt="Yapper User" />
         </AvatarLink>
       
         <div style={{flexGrow:1}}>
-          <Link style={{color:'#fff'}} to={`/${props.handle}`}><strong>{props.fullName}</strong> <LightenedText>@{props.handle}</LightenedText></Link>
+          <Link style={{color:'#fff'}} to={`/${props.userId.handle}`}><strong>{props.userId.fullName}</strong> <LightenedText>@{props.userId.handle}</LightenedText></Link>
           <YipTimeStamp>{props.timeStamp}</YipTimeStamp>
         
           <YipParagraph>{props.body}</YipParagraph>

@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const YipSchema = new Schema({
-  userId: Schema.Types.ObjectId,
+  // userId: Schema.Types.ObjectId,
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   body: String,
   images: [String],
   gif: {

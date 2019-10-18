@@ -53,12 +53,7 @@ class Timeline extends React.Component {
   render() {
     return (
       <TimelineContainer>
-        {this.state.yips.map(yip => {
-          yip.profileImage = this.state.profileImage;
-          yip.handle = this.state.handle;
-          yip.fullName = this.state.fullName;
-          return <Yip {...yip} showFullSizeMedia={this.showFullSizeMedia} key={yip._id} />;
-        })}
+        {this.state.yips.map(yip => <Yip {...yip} showFullSizeMedia={this.showFullSizeMedia} key={yip._id} />)}
         {this.state.fullSizeMedia ? <Modal body={<img id="modalBodyImage" src={this.state.fullSizeMedia} style={{width:'100%'}} alt="Yip Body Full Size" />} closeModal={this.closeFullSizeMedia} /> : ''}
         {this.state.loading && <LoadingSpinner />}
       </TimelineContainer>

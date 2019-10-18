@@ -14,23 +14,11 @@ export default class PublicProfile extends Component {
     this.state = {
       session,
       user: {},
-      // handle: '',
-      // email: '',
-      // profileImage: '',
-      // landscapeImage: '',
-      // followerCount: 0,
-      // followingCount: 0,
-      // dateJoined: '',
-      // locationCity: '',
-      // locationState: '',
-      // occupation: '',
-      // employer: '',
       loading: false
     };
   }
 
   async componentDidMount() {
-    console.log('componentDidMount: ', this.props.match.params.handle);
     try {
       this.setState({ loading: true });
       const headers = {
