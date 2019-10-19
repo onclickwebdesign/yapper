@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { LightenedText, StyledLink, Flex, FlexItem } from '../styled';
@@ -24,7 +24,15 @@ const MiniProfile = props => {
       </Link>
       <BottomContainer>
         <h4>{props.user.fullName}</h4>
-        <div><LightenedText>@{props.user.handle}</LightenedText></div>
+
+        <Flex>
+          <FlexItem>
+            <LightenedText>@{props.user.handle}</LightenedText>
+          </FlexItem>
+          <FlexItem style={{marginLeft:20}}>
+            <LightenedText>{props.user.yipCount} yips</LightenedText>
+          </FlexItem>
+        </Flex>
         <div style={{margin:'10px 0'}}>{props.user.occupation} at {props.user.employer}</div>
         <Flex>
           <FlexItem style={{marginRight:20}}>
@@ -40,7 +48,7 @@ const MiniProfile = props => {
             </StyledLink>
           </FlexItem>
         </Flex>
-        {props.token ? <FollowButton isFollowing={props.user.isFollowing} doFollow={props.doFollow} /> : ''}
+        {props.token ? <FollowButton index={props.index} isFollowing={props.user.isFollowing} doFollow={props.doFollow} handle={props.user.handle} /> : ''}
       </BottomContainer>
     </MiniProfileContainer>
   );

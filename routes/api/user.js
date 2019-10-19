@@ -7,15 +7,13 @@ const { s3upload, getMonthName } = require('../../util/utilities');
 
 
 /*
- * Gets top trending and popular user objects.
+ * Gets top trending and popular users.
  * It includes optional token verification.
  * If a token is included in the request headers, then the response will include a boolean of whether or not the verified user is following each user.
  */
 router.get('/explore', verify.optional, async (req, res) => {
   const id = req.payload ? req.payload.id : null;
-  let users = await User.find().select('handle fullName followers followerCount followingCount employer occupation profileImage -_id').sort({ followingCount: 'descending', yipCount: 'descending' }).limit(10);
-
-  // todo eric: still need to filter out the currently logged in user from the explore list...
+  let users = await User.find({ _id: {$ne: id}}).select('handle fullName yipCount followers followerCount followingCount employer occupation profileImage -_id').sort({ followerCount: 'descending', yipCount: 'descending' }).limit(10);
 
   if (id !== null) {
     // add an isFollowing boolean flag to each user object

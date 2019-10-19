@@ -126,7 +126,7 @@ class ComposeYip extends Component {
   }
 
   async componentDidMount() {
-    console.log('compose yip componentDidMount()');
+    
   }
 
   postYip = async () => {

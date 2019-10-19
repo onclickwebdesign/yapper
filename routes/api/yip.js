@@ -65,6 +65,7 @@ router.post('/', verify.required, async (req, res) => {
     res.status(500).json({ success: false, error: err });
   }
 
+  await User.findByIdAndUpdate(id, { $inc: { yipCount: 1 } });
   res.status(200).json({ success: true, message: 'Yip posted successfully.', newYip });
 });
 
@@ -93,9 +94,12 @@ router.post('/:type/:count', verify.required, async (req, res) => {
 
       const images = req.files ? req.files.map(file => file.location) : ['Location_not_defined'];
       const theYip = await Yip.findByIdAndUpdate(newYip._id, { body: req.body.yipBody, images }, { new: true }).catch(e => err = e);
+
+      await User.findByIdAndUpdate(id, { $inc: { yipCount: 1 } });
       res.status(200).json({ success: true, message: 'Yip posted successfully.', theYip });
     });
   } else {
+    await User.findByIdAndUpdate(id, { $inc: { yipCount: 1 } });
     res.status(200).json({ success: true, message: 'Yip posted successfully.', newYip });
   }
 });

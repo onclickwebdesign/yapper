@@ -10,8 +10,8 @@ const FollowButtonStyled = styled.button`
 const FollowButton = props => {
   return (
     props.isFollowing ? 
-      <FollowButtonStyled onClick={() => props.doFollow(true)} className="btn btn-primary yapper-btn-primary">Unfollow</FollowButtonStyled> : 
-      <FollowButtonStyled onClick={() => props.doFollow(false)} className="btn btn-primary yapper-btn-primary">Follow</FollowButtonStyled>
+      <FollowButtonStyled onClick={() => props.doFollow(true, props.handle, props.index)} className="btn btn-primary yapper-btn-primary">Unfollow</FollowButtonStyled> : 
+      <FollowButtonStyled onClick={() => props.doFollow(false, props.handle, props.index)} className="btn btn-primary yapper-btn-primary">Follow</FollowButtonStyled>
   );
 };
 

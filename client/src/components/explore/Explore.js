@@ -17,7 +17,6 @@ export default class Explore extends Component {
   }
 
   async componentDidMount() {
-    console.log('Explore componentDidMount()');
     try {
       this.setState({ loading: true });
       const headers = {
@@ -46,7 +45,7 @@ export default class Explore extends Component {
     }
   }
 
-  doFollow = async (isUnfollow, handle) => {
+  doFollow = async (isUnfollow, handle, index) => {
     this.setState({ loading: true });
     const headers = {
       'Content-Type': 'application/json',
@@ -54,11 +53,9 @@ export default class Explore extends Component {
     };
     const response = await fetchApi.fetchPost(`/api/user/${isUnfollow ? 'un' : ''}follow/${handle}`, headers, null);
     const json = await response.json();
-
-    // todo eric: need to update just the one user in the this.state.users array..
     const newUserState = this.state.users;
-    // newUserState.followerCount = json.followerCount;
-    // newUserState.isFollowing = !isUnfollow;
+    newUserState[index].followerCount = json.followerCount;
+    newUserState[index].isFollowing = !isUnfollow;
     this.setState({ loading: false, users: newUserState });
   }
 
@@ -66,7 +63,8 @@ export default class Explore extends Component {
     return (
       <ExploreSection>
         <Flex style={{justifyContent:'space-between'}}>
-          {this.state.users ? this.state.users.map((user, i) => <div style={{width:'45%', margin:'1rem'}}><MiniProfile key={`${i}-${user.handle}`} doFollow={this.doFollow} user={user} token={this.state.session ? this.state.session.token : ''} /></div>) : ''}
+          {this.state.users ? this.state.users.map((user, i) => 
+            <div key={`${i}-${user.handle}`} style={{width:'45%', margin:'1rem'}}><MiniProfile doFollow={this.doFollow} user={user} index={i} token={this.state.session ? this.state.session.token : ''} /></div>) : ''}
         </Flex>
 
         {this.state.loading && <LoadingSpinner />}

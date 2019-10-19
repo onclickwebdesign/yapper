@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { StyledLink, Flex, FlexItem } from '../styled';
 
 const ProfileInfoContainer = styled.div`
@@ -15,23 +14,6 @@ const PositionedImage = styled.div`
   top: -50%;
   width: 175px;
 `;
-
-// const Flex = styled.div`
-//   display: flex;
-//   flex-wrap: wrap;
-// `;
-
-// const FlexItem = styled.div`
-//   margin: 5px 10px 0 0;
-// `;
-
-// const StyledLink = styled(Link)`
-//   color: #fff;
-//   &:hover {
-//     text-decoration: underline;
-//     color: #fff;
-//   }
-// `;
 
 const FollowButton = styled.button`
   position: absolute;
@@ -61,7 +43,11 @@ const ProfileInfo = props => {
       </PositionedImage>
 
       <h4 style={{marginBottom:5}}>{props.fullName} <span className="fa fa-lock"></span></h4>
-      <div style={lightened}>@{props.handle}</div>
+      <Flex>
+        <FlexItem style={lightened}>@{props.handle}</FlexItem>
+        <FlexItem style={{marginLeft: 20, ...lightened}}>{props.yipCount} yips</FlexItem>
+      </Flex>
+      {/* <div style={lightened}>@{props.handle}</div> */}
       <div style={{margin:'10px 0'}}>{props.occupation} at {props.employer}</div>
       <Flex>
         <FlexItem style={lightened}>
