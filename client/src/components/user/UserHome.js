@@ -23,6 +23,10 @@ const MainSection = styled.main`
   justify-content: space-around;
   align-items: center;
   padding-left: 200px;
+
+  @media(max-width: 767px) {
+    padding-left: 80px;
+  }
 `;
 
 const UserHome = props => {

@@ -10,6 +10,10 @@ const SearchContainer = styled.div`
   margin-top: 1rem;
   width: 200px;
   position: relative;
+
+  @media(max-width: 767px) {
+    display: none;
+  }
 `;
 
 const SearchIcon = styled.span`
