@@ -32,8 +32,6 @@ export default class Explore extends Component {
 
       if (response.status === 200) {
         users = await response.json();
-
-        console.log('users: ', users);
         this.setState({ users: users.users });
       } else {
         alert('Error retrieving data for this page. Please reload this page.');
