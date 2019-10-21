@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import FollowButton from './FollowButton';
 import { StyledLink, Flex, FlexItem } from '../styled';
 
 const ProfileInfoContainer = styled.div`
@@ -15,29 +16,16 @@ const PositionedImage = styled.div`
   width: 175px;
 `;
 
-const FollowButton = styled.button`
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-`;
-
 const lightened = {
   opacity: '0.5',
   fontWeight: 300
-};
-
-// Only for public profile
-const GetFollowButton = (isFollowing, doFollow) => {
-  return isFollowing ? 
-    <FollowButton onClick={() => doFollow(true)} className="btn btn-primary yapper-btn-primary">Unfollow</FollowButton> : 
-    <FollowButton onClick={() => doFollow(false)} className="btn btn-primary yapper-btn-primary">Follow</FollowButton>;
 };
 
 const ProfileInfo = props => { 
   return (
     <ProfileInfoContainer>
       {props.publicProfile && props.token ? 
-        GetFollowButton(props.isFollowing, props.doFollow) : ''}
+        <FollowButton isFollowing={props.isFollowing} doFollow={props.doFollow} /> : ''}
       <PositionedImage>
         {props.children}
       </PositionedImage>
@@ -47,7 +35,6 @@ const ProfileInfo = props => {
         <FlexItem style={lightened}>@{props.handle}</FlexItem>
         <FlexItem style={{marginLeft: 20, ...lightened}}>{props.yipCount} yips</FlexItem>
       </Flex>
-      {/* <div style={lightened}>@{props.handle}</div> */}
       <div style={{margin:'10px 0'}}>{props.occupation} at {props.employer}</div>
       <Flex>
         <FlexItem style={lightened}>
