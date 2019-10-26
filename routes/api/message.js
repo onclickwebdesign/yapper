@@ -10,10 +10,12 @@ require('dotenv').config();
 /*
  * Get currently logged in user's direct messages
  */
-router.get('/', verify.required, (req, res) => {
+router.get('/', verify.required, async (req, res) => {
   console.log('payload yo: ', req.payload);
   console.log('user yo: ', req.user);
-  // const { payload: { id } } = req;
+  const { payload: { id } } = req;
+  const user = await User.find({ _id: id }).populate('message').populate('messageIds');
+  console.log('user from messages route: ', user);
 
   res.status(200).json({ success: true, message: 'booya' });
 });
