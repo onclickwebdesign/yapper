@@ -14,10 +14,19 @@ router.get('/', verify.required, async (req, res) => {
   console.log('payload yo: ', req.payload);
   console.log('user yo: ', req.user);
   const { payload: { id } } = req;
-  const user = await User.find({ _id: id }).populate('message').populate('messageIds');
+  const user = await User.findById(id).populate('message').populate('messageIds', 'handle fullName profileImage -_id');
   console.log('user from messages route: ', user);
 
-  res.status(200).json({ success: true, message: 'booya' });
+  res.status(200).json({ success: true, user });
+});
+
+/*
+ * Get specific message's entire conversation by messageId
+ */
+router.get('/:id', verify.required, async (req, res) => {
+  const message = await Message.findById(req.params.id).populate('user1Id').populate('user2Id');
+  console.log('single message: ', message);
+  res.status(200).json({ success: true, message });
 });
 
 /*
@@ -31,7 +40,7 @@ router.post('/:handle', verify.required, async (req, res) => {
   const message = new Message({
     user1Id: id,
     user2Id: user2._id,
-    conversation: [{ user: { body: req.body.message, handle: user1.handle } }],
+    conversation: [{ user: { body: req.body.body, handle: user1.handle } }],
     createdDate: [Date.now()]
   });
 
@@ -51,7 +60,7 @@ router.put('/reply/:id', verify.required, async (req, res) => {
   // const user1 = await User.findById(id);
   // const user2 = await User.findOne({ handle: req.params.handle });
   const updatedMessage = await message.update({ 
-    $push: { conversation: { user: { body: req.body.message, handle: req.payload.handle } } },
+    $push: { conversation: { user: { body: req.body.body, handle: req.payload.handle } } },
     $push: { createdDate: Date.now() }
   }, { new: true });
   
