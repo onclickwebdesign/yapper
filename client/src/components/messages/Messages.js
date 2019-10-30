@@ -7,6 +7,7 @@ import { fetchApi } from '../../util';
 const MessagesSection = styled.section`
   display: flex;
   justify-content: space-between;
+  border-top: 1px solid #fff;
 `;
 
 export default class Messages extends Component {
@@ -15,14 +16,11 @@ export default class Messages extends Component {
     const session = JSON.parse(localStorage.getItem('usersession'));
 
     this.state = { 
-      messages: [
-        { profileImage: 'https://yapper-bucket.s3.amazonaws.com/5daa1940243589335cbcfcd1/profile/user-15714292834053093617209884204.jpg', handle: 'tripleA', name: 'Adrien Atallah', timestamp: '4h ago' },
-        { profileImage: 'https://yapper-bucket.s3.amazonaws.com/5daa1940243589335cbcfcd1/profile/user-15714292834053093617209884204.jpg', handle: 'crazyantoine', name: 'Antoine Atallah', timestamp: '1d ago' }
-      ],
+      messages: [],
       user: session,
       token: session.token,
       body: '',
-      currentConversation: { handle: 'crazyantoine', fullName: 'Antoine Atallah', conversation: [] }
+      currentConversation: { handle: 'crazyantoine', fullName: '', conversation: [] }
     };
   }
 
@@ -35,7 +33,7 @@ export default class Messages extends Component {
     const response = await fetchApi.fetchGet('/api/message', headers);
     const messages = await response.json();
     console.log('messages: ', messages);
-    //this.setState({ messages });
+    this.setState({ messages: messages.user.messages });
   }
 
   startConversation = async (id, handle) => {
@@ -65,17 +63,17 @@ export default class Messages extends Component {
       'Authorization': `Token ${this.state.token}`
     };
 
-    const response = await fetchApi.fetchGet('/api/message/id', headers);
-    const currentConversation = await response.json();
-    console.log('message: ', currentConversation);
-    this.setState({ currentConversation });
+    const response = await fetchApi.fetchGet(`/api/message/${id}`, headers);
+    const conversation = await response.json();
+    console.log('message: ', conversation);
+    this.setState({ currentConversation: conversation.message });
   };
 
   render() {
     return (
       <MessagesSection>
         <MessagesList messages={this.state.messages} loadConversation={this.loadConversation} />
-        <ConversationContainer {...this.state.currentConversation} handleInputChange={this.handleInputChange} sendMessage={this.sendMessage} body={this.state.body} />
+        <ConversationContainer {...this.state.currentConversation} handleInputChange={this.handleInputChange} startConversation={this.startConversation} body={this.state.body} />
       </MessagesSection>
     )
   }

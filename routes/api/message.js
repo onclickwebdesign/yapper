@@ -14,7 +14,7 @@ router.get('/', verify.required, async (req, res) => {
   console.log('payload yo: ', req.payload);
   console.log('user yo: ', req.user);
   const { payload: { id } } = req;
-  const user = await User.findById(id).populate('message').populate('messageIds', 'handle fullName profileImage -_id');
+  const user = await User.findById(id).select('-_id'); // .populate('message').populate('messageUserIds', 'handle fullName profileImage -_id');
   console.log('user from messages route: ', user);
 
   res.status(200).json({ success: true, user });
@@ -37,16 +37,19 @@ router.post('/:handle', verify.required, async (req, res) => {
   const user1 = await User.findById(id); // initiates the message
   const user2 = await User.findOne({ handle: req.params.handle });
 
+  await user1.update({ $pullAll: { messageUserIds: [user2._id] } });
+  await user2.update({ $pullAll: { messageUserIds: [id] } });
+
   const message = new Message({
     user1Id: id,
     user2Id: user2._id,
-    conversation: [{ user: { body: req.body.body, handle: user1.handle } }],
-    createdDate: [Date.now()]
+    conversation: [{ body: req.body.body, handle: user1.handle }],
+    createdDate: Date.now()
   });
 
   const postedMessage = await message.save();
-  await user1.update({ $push: { messages: postedMessage._id }, $push: { messageUserIds: user2._id } });
-  await user2.update({ $push: { messages: postedMessage._id }, $push: { messageUserIds: id } });
+  await user1.update({ $push: { messages: {id: postedMessage._id, profileImage: user2.profileImage, handle: user2.handle, name: user2.fullName} } });
+  await user2.update({ $push: { messages: {id: postedMessage._id, profileImage: user1.profileImage, handle: user1.handle, name: user1.fullName} } });
   res.status(200).json({ success: true, message: 'Message sent successfully.' });
 });
 
@@ -59,10 +62,10 @@ router.put('/reply/:id', verify.required, async (req, res) => {
   const message = Message.findById(req.params.id);
   // const user1 = await User.findById(id);
   // const user2 = await User.findOne({ handle: req.params.handle });
-  const updatedMessage = await message.update({ 
-    $push: { conversation: { user: { body: req.body.body, handle: req.payload.handle } } },
-    $push: { createdDate: Date.now() }
-  }, { new: true });
+  const updatedMessage = await message.update(
+    { $push: { conversation: { body: req.body.body, handle: req.payload.handle } } },
+    { createdDate: Date.now() }, 
+    { new: true });
   
   res.status(200).json({ success: true, message: updatedMessage });
 });

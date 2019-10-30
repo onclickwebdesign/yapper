@@ -4,6 +4,13 @@ const jwt = require('jsonwebtoken');
 
 const { Schema } = mongoose;
 
+const UserMessageSchema = new Schema({
+  id: Schema.Types.ObjectId,
+  handle: String,
+  profileImage: String,
+  name: String
+}, { _id: false });
+
 const UserSchema = new Schema({
   email: String,
   hash: String,
@@ -20,8 +27,8 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
-  messageUserIds: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  messages: [UserMessageSchema],
+  // messageUserIds: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   following: [Schema.Types.ObjectId],
   followers: [Schema.Types.ObjectId],
   followingCount: { type: Number, min: 0, default: 0 },
