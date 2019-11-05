@@ -13,7 +13,7 @@ export default class Messages extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { messages: [] };
+    this.state = { messages: [], currentMessage: {} };
   }
 
   async componentDidMount() {
@@ -28,14 +28,23 @@ export default class Messages extends Component {
 
   loadConversation = (id, handle) => {
     console.log('loadConversation: ', id, handle);
+    this.setState({ currentMessage });
+  }
 
-  };
+  postMessage = (id, handle) => {
+    console.log('postMessage: ', id, handle);
+  }
+
+  replyMessage = (id, handle) => {
+    console.log('replyMessage: ', id, handle);
+  
+  }
 
   render() {
     return (
       <MessagesSection>
-        <MessagesList messages={this.state.messages} loadConversation={this.loadConversation} />
-        <ConversationContainer />
+        <MessagesList messages={this.state.messages.messageUserIds} loadConversation={this.loadConversation} />
+        <ConversationContainer currentMessage={this.state.currentMessage} postMessage={this.postMessage} replyMessage={this.replyMessage} />
       </MessagesSection>
     )
   }
