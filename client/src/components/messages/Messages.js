@@ -7,13 +7,21 @@ import { fetchApi } from '../../util';
 const MessagesSection = styled.section`
   display: flex;
   justify-content: space-between;
+  border-top: 1px solid #fff;
 `;
 
 export default class Messages extends Component {
   constructor(props) {
     super(props);
+    const session = JSON.parse(localStorage.getItem('usersession'));
 
-    this.state = { messages: [], currentMessage: {} };
+    this.state = { 
+      messages: [],
+      user: session,
+      token: session.token,
+      body: '',
+      currentConversation: { handle: 'crazyantoine', fullName: '', conversation: [] }
+    };
   }
 
   async componentDidMount() {
@@ -22,29 +30,51 @@ export default class Messages extends Component {
       'Authorization': `Token ${this.state.token}`
     };
 
-    const messages = await fetchApi.fetchGet('/api/message', headers);
-    this.setState({ messages });
+    const response = await fetchApi.fetchGet('/api/message', headers);
+    const messages = await response.json();
+    console.log('messages: ', messages);
+    this.setState({ messages: messages.user.messages });
   }
 
-  loadConversation = (id, handle) => {
+  startConversation = async (id, handle) => {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.state.token}`
+    };
+
+    const data = { body: this.state.body };
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `/api/message/${id}` : `/api/message/${handle}`;
+    
+    const response = await fetchApi.fetch(url, headers, JSON.stringify(data), method);
+    const sent = await response.json();
+    console.log('sent message: ', sent);
+  }
+
+  handleInputChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  loadConversation = async (id, handle) => {
     console.log('loadConversation: ', id, handle);
-    this.setState({ currentMessage });
-  }
 
-  postMessage = (id, handle) => {
-    console.log('postMessage: ', id, handle);
-  }
+    // fetch call to get entire conversation
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.state.token}`
+    };
 
-  replyMessage = (id, handle) => {
-    console.log('replyMessage: ', id, handle);
-  
-  }
+    const response = await fetchApi.fetchGet(`/api/message/${id}`, headers);
+    const conversation = await response.json();
+    console.log('message: ', conversation);
+    this.setState({ currentConversation: conversation.message });
+  };
 
   render() {
     return (
       <MessagesSection>
-        <MessagesList messages={this.state.messages.messageUserIds} loadConversation={this.loadConversation} />
-        <ConversationContainer currentMessage={this.state.currentMessage} postMessage={this.postMessage} replyMessage={this.replyMessage} />
+        <MessagesList messages={this.state.messages} loadConversation={this.loadConversation} />
+        <ConversationContainer {...this.state.currentConversation} handleInputChange={this.handleInputChange} startConversation={this.startConversation} body={this.state.body} />
       </MessagesSection>
     )
   }

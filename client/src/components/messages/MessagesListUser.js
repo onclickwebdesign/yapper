@@ -4,12 +4,13 @@ import { LightenedText, Avatar, AvatarLink } from '../styled';
 import { constants } from '../../util';
 
 const MessagesListUserContainer = styled.div`
-  padding: 0.5rem;
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
 
   &:hover {
-    background: #ddd;
+    background: #555;
   }
 `;
 
@@ -19,15 +20,15 @@ const FlexItem = styled.div`
 
 const MessagesListUser = props => {
   return (
-    <MessagesListUserContainer onClick={() => props.loadConversation(props.messageId, props.handle)}>
+    <MessagesListUserContainer onClick={() => props.loadConversation(props.id, props.handle)}>
       <AvatarLink 
-        to={`/${props.user.handle}`} 
-        style={{background:`url(${props.user.profileImage || constants.DEFAULT_USER_IMAGE}) center center no-repeat`}}>
-        <Avatar style={{display:'none'}} src={props.user.profileImage || constants.DEFAULT_USER_IMAGE} alt="Yapper User" />
+        to={`/${props.handle}`} 
+        style={{background:`url(${props.profileImage || constants.DEFAULT_USER_IMAGE}) center center no-repeat`}}>
+        <Avatar style={{display:'none'}} src={props.profileImage || constants.DEFAULT_USER_IMAGE} alt="Yapper User" />
       </AvatarLink>
 
       <FlexItem>
-        Alexander Atallah <LightenedText>@potato</LightenedText>
+        {props.name} <LightenedText>@{props.handle}</LightenedText>
       </FlexItem>
 
       <FlexItem>

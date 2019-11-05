@@ -4,10 +4,9 @@ import MessagesListUser from './MessagesListUser';
 
 const MessagesList = props => {
   return (
-    <div>MessagesList.js</div>
-    // props.messages.map(message => (
-    // <MessagesListUser loadConversation={props.loadConversation} ...message />
-    // ))
+    props.messages.map((message, idx) => (
+      message && <MessagesListUser key={message.id} loadConversation={props.loadConversation} {...message} />
+    ))
   );
 };
 

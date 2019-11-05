@@ -11,6 +11,13 @@ const FetchAPI = {
       headers,
       body
     });
+  },
+  fetch: (url, headers, body, method) => {
+    return fetch(url, {
+      method,
+      headers,
+      body
+    });
   }
 };
 
