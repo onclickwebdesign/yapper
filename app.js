@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // Configure Mongoose
 const mongoURI = process.env.NODE_ENV === 'test' ? process.env.mongo_cluster_connection_test : process.env.mongo_cluster_connection;
-mongoose.connect(mongoURI || 'mongodb://localhost/yapper', { useNewUrlParser: true}).then(
+mongoose.connect(mongoURI || 'mongodb://localhost/yapper', { useUnifiedTopology: true, useNewUrlParser: true }).then(
   () => console.log(`MongoDB connected for ${process.env.NODE_ENV}.`)
 ).catch(err => console.error(err));
 

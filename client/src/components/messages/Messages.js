@@ -33,7 +33,7 @@ export default class Messages extends Component {
     const response = await fetchApi.fetchGet('/api/message', headers);
     const messages = await response.json();
     console.log('messages: ', messages);
-    this.setState({ messages: messages.user.messages });
+    this.setState({ messages: messages.user.messages || [] });
   }
 
   startConversation = async (id, handle) => {
