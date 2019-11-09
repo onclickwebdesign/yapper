@@ -37,8 +37,8 @@ router.post('/:handle', verify.required, async (req, res) => {
   const user1 = await User.findById(id); // initiates the message
   const user2 = await User.findOne({ handle: req.params.handle });
 
-  await user1.update({ $pullAll: { messageUserIds: [user2._id] } });
-  await user2.update({ $pullAll: { messageUserIds: [id] } });
+  await user1.update({ $pullAll: { messageUserIds: [user2._id], messages: [] } });
+  await user2.update({ $pullAll: { messageUserIds: [id] }, messages: [] });
 
   const message = new Message({
     user1Id: id,

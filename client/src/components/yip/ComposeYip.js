@@ -243,6 +243,7 @@ class ComposeYip extends Component {
 
   render() {
     return (
+      this.props.location.pathname.toLowerCase().indexOf('messages') > -1 ? '' :
       <ComposeContainer>
         <FlexContainer style={{marginBottom:20}}>
           <AvatarLink to={`/${this.state.user.handle}`} style={{background:`url(${this.state.user.profileImage || constants.DEFAULT_USER_IMAGE}) center center no-repeat`}}>

@@ -30,7 +30,7 @@ class Home extends Component {
     const app = this.state.token ? (
       <BrowserRouter>
         <Switch>
-          <Route path="/" component={() => <UserHome {...this.state} doSignOut={this.doSignOut} />} />
+          <Route path="/" component={(props) => <UserHome location={props.location} {...this.state} doSignOut={this.doSignOut} />} />
           <Route component={NotFound} />
         </Switch>
       </BrowserRouter>
